@@ -6,17 +6,19 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 17:40:57 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/01 20:21:34 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/02 02:38:10 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Server.hpp"
 #include <iostream>
 #include <string>
 #include <cstdlib>
 #include <cctype>
+#include <exception>
 
 static bool	parse_port(const std::string &str, int &port);
-static bool	valid_password(const std::string &pass);
+static bool	check_password(const std::string &pass);
 
 int	main(int argc, char **argv)
 {
@@ -32,12 +34,21 @@ int	main(int argc, char **argv)
 		std::cerr << "Error: invalid port (1-65535)" << std::endl;
 		return (1);
 	}
-	if (!valid_password(argv[2]))
+	if (!check_password(argv[2]))
 	{
 		std::cerr << "Error: invalid password (empty or has spaces)" << std::endl;
 		return (1);
 	}
-	std::cout << "Port: " << port << " | Password: " << argv[2] << std::endl;
+	try
+	{
+		Server	server(port, argv[2]);
+		server.run();
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << "Error: " << e.what() << std::endl;
+		return (1);
+	}
 	return (0);
 }
 
@@ -62,7 +73,7 @@ static bool	parse_port(const std::string &str, int &port)
 	return (true);
 }
 
-static bool	valid_password(const std::string &pass)
+static bool	check_password(const std::string &pass)
 {
 	size_t	i;
 

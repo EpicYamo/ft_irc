@@ -2,8 +2,8 @@ NAME		:= ircserv
 SRC_DIR		:= srcs
 OBJ_DIR		:= objs
 INC_DIR		:= includes
-SRCS		:= main.cpp
-HDRS		:=
+SRCS		:= main.cpp Server.cpp
+HDRS		:= Server.hpp
 
 OBJS		:= $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 HEADERS		:= $(addprefix $(INC_DIR)/, $(HDRS))
