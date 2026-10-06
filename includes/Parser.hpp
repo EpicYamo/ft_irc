@@ -1,39 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
+/*   Parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/05 23:31:50 by aaycan           ###   ########.fr       */
+/*   Created: 2026/10/06 00:33:40 by aaycan            #+#    #+#             */
+/*   Updated: 2026/10/06 00:34:03 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#ifndef PARSER_HPP
+# define PARSER_HPP
 
 # include <string>
+# include <vector>
 
-class Client
+struct Message
 {
-	private:
-		int			_fd;
-		std::string	_ip;
-		std::string	_recv_buf;
-
-		Client();
-
-	public:
-		Client(int fd, const std::string &ip);
-		Client(const Client &other);
-		~Client();
-		Client	&operator=(const Client &other);
-
-		int					get_fd() const;
-		const std::string	&get_ip() const;
-		void				append_recv(const char *data, size_t len);
-		bool				extract_line(std::string &line);
+	std::string					prefix;
+	std::string					command;
+	std::vector<std::string>	params;
 };
+
+bool	parse_message(const std::string &line, Message &msg);
 
 #endif

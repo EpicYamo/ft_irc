@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/04 21:16:44 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/05 23:32:46 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,21 @@ const std::string	&Client::get_ip() const
 	return (_ip);
 }
 
-std::string	&Client::get_recv_buf()
+void	Client::append_recv(const char *data, size_t len)
 {
-	return (_recv_buf);
+	_recv_buf.append(data, len);
+}
+
+bool	Client::extract_line(std::string &line)
+{
+	size_t	pos;
+
+	pos = _recv_buf.find('\n');
+	if (pos == std::string::npos)
+		return (false);
+	line = _recv_buf.substr(0, pos);
+	_recv_buf.erase(0, pos + 1);
+	if ((!line.empty()) && (line[line.size() - 1] == '\r'))
+		line.erase(line.size() - 1);
+	return (true);
 }

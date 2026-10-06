@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/04 20:11:13 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/06 18:56:18 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define SERVER_HPP
 
 # include "Client.hpp"
+# include "Parser.hpp"
 # include <string>
 # include <vector>
 # include <csignal>
@@ -41,6 +42,7 @@ class Server
 		void		accept_client();
 		bool		read_client(size_t i);
 		void		remove_client(size_t i);
+		void		handle_line(Client &client, const std::string &line);
 
 	public:
 		Server(int port, const std::string &password);

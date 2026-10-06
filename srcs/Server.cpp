@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/04 23:03:48 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/06 19:09:27 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,16 +155,18 @@ void	Server::accept_client()
 
 bool	Server::read_client(size_t i)
 {
-	char	buf[512];
-	ssize_t	bytes;
-	int		fd;
+	char		buf[512];
+	ssize_t		bytes;
+	Client		*client;
+	std::string	line;
 
-	fd = _pfds[i].fd;
-	bytes = recv(fd, buf, sizeof(buf), 0);
+	bytes = recv(_pfds[i].fd, buf, sizeof(buf), 0);
 	if (bytes <= 0)
 		return (false);
-	_clients.find(fd)->second.get_recv_buf().append(buf, bytes);
-	std::cout << "[" << fd << "] " << std::string(buf, bytes);
+	client = &(_clients.find(_pfds[i].fd)->second);
+	client->append_recv(buf, bytes);
+	while (client->extract_line(line))
+		handle_line(*client, line);
 	return (true);
 }
 
@@ -174,6 +176,23 @@ void	Server::remove_client(size_t i)
 	close(_pfds[i].fd);
 	_clients.erase(_pfds[i].fd);
 	_pfds.erase(_pfds.begin() + i);
+}
+
+void	Server::handle_line(Client &client, const std::string &line)
+{
+	Message	msg;
+	size_t	i;
+
+	if (!parse_message(line, msg))
+		return ;
+	std::cout << "[" << client.get_fd() << "] " << msg.command;
+	i = 0;
+	while (i < msg.params.size())
+	{
+		std::cout << " <" << msg.params[i] << ">";
+		i++;
+	}
+	std::cout << std::endl;
 }
 
 static std::string	sys_error(const std::string &func)
