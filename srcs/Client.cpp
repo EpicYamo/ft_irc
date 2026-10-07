@@ -6,20 +6,21 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/05 23:32:46 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/07 03:12:16 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
 Client::Client()
-	: _fd(-1), _ip(""), _recv_buf("") {}
+	: _fd(-1), _ip(""), _recv_buf(""), _send_buf("") {}
 
 Client::Client(int fd, const std::string &ip)
-	: _fd(fd), _ip(ip), _recv_buf("") {}
+	: _fd(fd), _ip(ip), _recv_buf(""), _send_buf("") {}
 
 Client::Client(const Client &other)
-	: _fd(other._fd), _ip(other._ip), _recv_buf(other._recv_buf) {}
+	: _fd(other._fd), _ip(other._ip), _recv_buf(other._recv_buf),
+	_send_buf(other._send_buf) {}
 
 Client::~Client() {}
 
@@ -30,6 +31,7 @@ Client	&Client::operator=(const Client &other)
 		_fd = other._fd;
 		_ip = other._ip;
 		_recv_buf = other._recv_buf;
+		_send_buf = other._send_buf;
 	}
 	return (*this);
 }
@@ -61,4 +63,19 @@ bool	Client::extract_line(std::string &line)
 	if ((!line.empty()) && (line[line.size() - 1] == '\r'))
 		line.erase(line.size() - 1);
 	return (true);
+}
+
+void	Client::append_send(const std::string &data)
+{
+	_send_buf += data;
+}
+
+const std::string	&Client::get_send_buf() const
+{
+	return (_send_buf);
+}
+
+void	Client::erase_send(size_t len)
+{
+	_send_buf.erase(0, len);
 }

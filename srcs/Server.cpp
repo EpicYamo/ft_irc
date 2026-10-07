@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/06 19:09:27 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/07 03:25:23 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,10 +117,15 @@ void	Server::handle_events()
 			if (_pfds[i].revents & POLLIN)
 				accept_client();
 		}
-		else if (_pfds[i].revents & POLLIN)
-			removed = !read_client(i);
-		else if (_pfds[i].revents & (POLLHUP | POLLERR | POLLNVAL))
-			removed = true;
+		else
+		{
+			if (_pfds[i].revents & POLLIN)
+				removed = !read_client(i);
+			else if (_pfds[i].revents & (POLLHUP | POLLERR | POLLNVAL))
+				removed = true;
+			if ((!removed) && (_pfds[i].revents & POLLOUT))
+				removed = !write_client(i);
+		}
 		if (removed)
 			remove_client(i);
 		else
@@ -170,6 +175,27 @@ bool	Server::read_client(size_t i)
 	return (true);
 }
 
+bool	Server::write_client(size_t i)
+{
+	Client	*client;
+	ssize_t	bytes;
+
+	client = &(_clients.find(_pfds[i].fd)->second);
+	if (client->get_send_buf().empty())
+	{
+		_pfds[i].events = POLLIN;
+		return (true);
+	}
+	bytes = send(_pfds[i].fd, client->get_send_buf().c_str(),
+			client->get_send_buf().size(), 0);
+	if (bytes < 0)
+		return (false);
+	client->erase_send(bytes);
+	if (client->get_send_buf().empty())
+		_pfds[i].events = POLLIN;
+	return (true);
+}
+
 void	Server::remove_client(size_t i)
 {
 	std::cout << "Client " << _pfds[i].fd << " disconnected" << std::endl;
@@ -193,6 +219,21 @@ void	Server::handle_line(Client &client, const std::string &line)
 		i++;
 	}
 	std::cout << std::endl;
+	send_msg(client, "ECHO " + msg.command);
+}
+
+void	Server::send_msg(Client &client, const std::string &msg)
+{
+	size_t	i;
+
+	client.append_send(msg + "\r\n");
+	i = 0;
+	while (i < _pfds.size())
+	{
+		if (_pfds[i].fd == client.get_fd())
+			_pfds[i].events = POLLIN | POLLOUT;
+		i++;
+	}
 }
 
 static std::string	sys_error(const std::string &func)

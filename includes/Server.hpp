@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/06 18:56:18 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/07 03:15:36 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ class Server
 		bool		read_client(size_t i);
 		void		remove_client(size_t i);
 		void		handle_line(Client &client, const std::string &line);
+		bool		write_client(size_t i);
+		void		send_msg(Client &client, const std::string &msg);
 
 	public:
 		Server(int port, const std::string &password);
