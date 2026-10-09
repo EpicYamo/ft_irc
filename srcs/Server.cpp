@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/07 03:25:23 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/09 01:45:24 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,21 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <cstddef>
 
 static std::string	sys_error(const std::string &func);
+static bool			is_registration_cmd(const std::string &cmd);
 
 volatile sig_atomic_t	Server::_stop = 0;
 
 Server::Server(int port, const std::string &password)
-	: _port(port), _password(password), _listen_fd(-1) {}
+	: _port(port), _password(password), _listen_fd(-1)
+{
+	_commands["CAP"] = &Server::cmd_cap;
+	_commands["PASS"] = &Server::cmd_pass;
+	_commands["NICK"] = &Server::cmd_nick;
+	_commands["USER"] = &Server::cmd_user;
+}
 
 Server::~Server()
 {
@@ -206,26 +214,31 @@ void	Server::remove_client(size_t i)
 
 void	Server::handle_line(Client &client, const std::string &line)
 {
-	Message	msg;
-	size_t	i;
+	Message									msg;
+	std::map<std::string, t_cmd>::iterator	it;
 
+	std::cout << "<< [" << client.get_fd() << "] " << line << std::endl;
 	if (!parse_message(line, msg))
 		return ;
-	std::cout << "[" << client.get_fd() << "] " << msg.command;
-	i = 0;
-	while (i < msg.params.size())
+	it = _commands.find(msg.command);
+	if (it == _commands.end())
 	{
-		std::cout << " <" << msg.params[i] << ">";
-		i++;
+		reply(client, ERR_UNKNOWNCOMMAND, msg.command + " :Unknown command");
+		return ;
 	}
-	std::cout << std::endl;
-	send_msg(client, "ECHO " + msg.command);
+	if ((!client.is_registered()) && (!is_registration_cmd(msg.command)))
+	{
+		reply(client, ERR_NOTREGISTERED, ":You have not registered");
+		return ;
+	}
+	(this->*(it->second))(client, msg);
 }
 
-void	Server::send_msg(Client &client, const std::string &msg)
+void	Server::queue_msg(Client &client, const std::string &msg)
 {
 	size_t	i;
 
+	std::cout << ">> [" << client.get_fd() << "] " << msg << std::endl;
 	client.append_send(msg + "\r\n");
 	i = 0;
 	while (i < _pfds.size())
@@ -236,7 +249,57 @@ void	Server::send_msg(Client &client, const std::string &msg)
 	}
 }
 
+void	Server::reply(Client &client, const std::string &code,
+	const std::string &text)
+{
+	std::string	target;
+
+	target = client.get_nick();
+	if (target.empty())
+		target = "*";
+	queue_msg(client, ":" SERVER_NAME " " + code + " " + target + " " + text);
+}
+
+void	Server::try_register(Client &client)
+{
+	if ((client.is_registered()) || (client.get_nick().empty())
+		|| (client.get_username().empty()))
+		return ;
+	if (!client.is_pass_ok())
+	{
+		reply(client, ERR_PASSWDMISMATCH, ":Password incorrect");
+		return ;
+	}
+	client.set_registered(true);
+	reply(client, RPL_WELCOME, ":Welcome to the IRC network, "
+		+ client.get_prefix());
+	reply(client, RPL_YOURHOST, ":Your host is " SERVER_NAME
+		", running version 1.0");
+	reply(client, RPL_CREATED, ":This server was created for 42");
+	reply(client, RPL_MYINFO, SERVER_NAME " 1.0 o itkol");
+}
+
+Client	*Server::find_client_by_nick(const std::string &nick)
+{
+	std::map<int, Client>::iterator	it;
+
+	it = _clients.begin();
+	while (it != _clients.end())
+	{
+		if (irc_lower(it->second.get_nick()) == irc_lower(nick))
+			return (&(it->second));
+		it++;
+	}
+	return (NULL);
+}
+
 static std::string	sys_error(const std::string &func)
 {
 	return (func + "() failed: " + std::strerror(errno));
+}
+
+static bool	is_registration_cmd(const std::string &cmd)
+{
+	return ((cmd == "CAP") || (cmd == "PASS") || (cmd == "NICK")
+		|| (cmd == "USER") || (cmd == "PING") || (cmd == "QUIT"));
 }

@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Parser.hpp                                         :+:      :+:    :+:   */
+/*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/06 00:33:40 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/08 23:38:37 by aaycan           ###   ########.fr       */
+/*   Created: 2026/10/09 02:51:12 by aaycan            #+#    #+#             */
+/*   Updated: 2026/10/09 02:51:18 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_HPP
-# define PARSER_HPP
+#include "Server.hpp"
 
-# include <string>
-# include <vector>
-
-struct Message
+void	Server::cmd_user(Client &client, const Message &msg)
 {
-	std::string					prefix;
-	std::string					command;
-	std::vector<std::string>	params;
-};
-
-bool		parse_message(const std::string &line, Message &msg);
-std::string	irc_lower(const std::string &str);
-
-#endif
+	if (client.is_registered())
+	{
+		reply(client, ERR_ALREADYREGISTRED, ":You may not reregister");
+		return ;
+	}
+	if ((msg.params.size() < 4) || (msg.params[0].empty()))
+	{
+		reply(client, ERR_NEEDMOREPARAMS, "USER :Not enough parameters");
+		return ;
+	}
+	client.set_user(msg.params[0], msg.params[3]);
+	try_register(client);
+}

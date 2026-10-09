@@ -1,29 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Parser.hpp                                         :+:      :+:    :+:   */
+/*   Cap.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/10/06 00:33:40 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/08 23:38:37 by aaycan           ###   ########.fr       */
+/*   Created: 2026/10/09 01:48:04 by aaycan            #+#    #+#             */
+/*   Updated: 2026/10/09 01:48:25 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_HPP
-# define PARSER_HPP
+#include "Server.hpp"
 
-# include <string>
-# include <vector>
-
-struct Message
+void	Server::cmd_cap(Client &client, const Message &msg)
 {
-	std::string					prefix;
-	std::string					command;
-	std::vector<std::string>	params;
-};
-
-bool		parse_message(const std::string &line, Message &msg);
-std::string	irc_lower(const std::string &str);
-
-#endif
+	(void)client;
+	(void)msg;
+}

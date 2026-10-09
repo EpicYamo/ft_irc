@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/06 00:36:52 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/06 18:55:57 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/08 23:39:04 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,19 @@ static void	to_upper(std::string &str)
 		str[i] = std::toupper(static_cast<unsigned char>(str[i]));
 		i++;
 	}
+}
+
+std::string	irc_lower(const std::string &str)
+{
+	std::string	result;
+	size_t		i;
+
+	result = str;
+	i = 0;
+	while (i < result.size())
+	{
+		result[i] = std::tolower(static_cast<unsigned char>(result[i]));
+		i++;
+	}
+	return (result);
 }
