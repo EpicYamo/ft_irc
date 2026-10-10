@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/09 01:45:24 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/10 22:11:17 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,15 +220,15 @@ void	Server::handle_line(Client &client, const std::string &line)
 	std::cout << "<< [" << client.get_fd() << "] " << line << std::endl;
 	if (!parse_message(line, msg))
 		return ;
+	if ((!client.is_registered()) && (!is_registration_cmd(msg.command)))
+	{
+		reply(client, ERR_NOTREGISTERED, ":You have not registered");
+		return ;
+	}
 	it = _commands.find(msg.command);
 	if (it == _commands.end())
 	{
 		reply(client, ERR_UNKNOWNCOMMAND, msg.command + " :Unknown command");
-		return ;
-	}
-	if ((!client.is_registered()) && (!is_registration_cmd(msg.command)))
-	{
-		reply(client, ERR_NOTREGISTERED, ":You have not registered");
 		return ;
 	}
 	(this->*(it->second))(client, msg);
