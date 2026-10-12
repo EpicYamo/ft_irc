@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 01:53:15 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/09 02:45:20 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 20:06:29 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	Server::cmd_nick(Client &client, const Message &msg)
 			msg.params[0] + " :Erroneous nickname");
 		return ;
 	}
+	if (msg.params[0] == client.get_nick())
+		return ;
 	other = find_client_by_nick(msg.params[0]);
 	if ((other != NULL) && (other != &client))
 	{
