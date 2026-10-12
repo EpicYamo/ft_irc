@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 20:44:03 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 20:58:27 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ Server::Server(int port, const std::string &password)
 	_commands["NICK"] = &Server::cmd_nick;
 	_commands["USER"] = &Server::cmd_user;
 	_commands["PING"] = &Server::cmd_ping;
+	_commands["PONG"] = &Server::cmd_pong;
 }
 
 Server::~Server()
@@ -329,7 +330,8 @@ static std::string	sys_error(const std::string &func)
 static bool	is_registration_cmd(const std::string &cmd)
 {
 	return ((cmd == "CAP") || (cmd == "PASS") || (cmd == "NICK")
-		|| (cmd == "USER") || (cmd == "PING") || (cmd == "QUIT"));
+		|| (cmd == "USER") || (cmd == "PING") || (cmd == "QUIT")
+		|| (cmd == "PONG"));
 }
 
 static bool	prefix_matches(const Client &client, const std::string &prefix)

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 20:43:30 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 20:57:32 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Server
 		void		cmd_nick(Client &client, const Message &msg);
 		void		cmd_user(Client &client, const Message &msg);
 		void		cmd_ping(Client &client, const Message &msg);
+		void		cmd_pong(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);
