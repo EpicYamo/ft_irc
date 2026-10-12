@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 05:14:25 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 06:28:00 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 Client::Client()
 	: _fd(-1), _ip(""), _recv_buf(""), _send_buf(""), _nick(""),
 	_username(""), _realname(""), _pass_ok(false), _registered(false),
-	_closing(false) {}
+	_closing(false), _cap_negotiating(false) {}
 
 Client::Client(int fd, const std::string &ip)
 	: _fd(fd), _ip(ip), _recv_buf(""), _send_buf(""), _nick(""),
 	_username(""), _realname(""), _pass_ok(false), _registered(false),
-	_closing(false) {}
+	_closing(false), _cap_negotiating(false) {}
 
 Client::Client(const Client &other)
 	: _fd(other._fd), _ip(other._ip), _recv_buf(other._recv_buf),
 	_send_buf(other._send_buf), _nick(other._nick),
 	_username(other._username), _realname(other._realname),
 	_pass_ok(other._pass_ok), _registered(other._registered),
-	_closing(other._closing) {}
+	_closing(other._closing), _cap_negotiating(other._cap_negotiating) {}
 
 Client::~Client() {}
 
@@ -45,6 +45,7 @@ Client	&Client::operator=(const Client &other)
 		_pass_ok = other._pass_ok;
 		_registered = other._registered;
 		_closing = other._closing;
+		_cap_negotiating = other._cap_negotiating;
 	}
 	return (*this);
 }
@@ -128,6 +129,11 @@ bool	Client::is_closing() const
 	return (_closing);
 }
 
+bool	Client::is_cap_negotiating(void) const
+{
+	return (_cap_negotiating);
+}
+
 void	Client::set_nick(const std::string &nick)
 {
 	_nick = nick;
@@ -147,4 +153,14 @@ void	Client::set_pass_ok(bool value)
 void	Client::set_registered(bool value)
 {
 	_registered = value;
+}
+
+void	Client::set_closing(bool value)
+{
+	_closing = value;
+}
+
+void	Client::set_cap_negotiating(bool value)
+{
+	_cap_negotiating = value;
 }

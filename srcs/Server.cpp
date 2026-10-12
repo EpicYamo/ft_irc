@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 05:17:46 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 06:21:31 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,18 +190,20 @@ bool	Server::write_client(size_t i)
 	ssize_t	bytes;
 
 	client = &(_clients.find(_pfds[i].fd)->second);
+	if (!client->get_send_buf().empty())
+	{
+		bytes = send(_pfds[i].fd, client->get_send_buf().c_str(),
+				client->get_send_buf().size(), 0);
+		if (bytes < 0)
+			return (false);
+		client->erase_send(bytes);
+	}
 	if (client->get_send_buf().empty())
 	{
+		if (client->is_closing())
+			return (false);
 		_pfds[i].events = POLLIN;
-		return (true);
 	}
-	bytes = send(_pfds[i].fd, client->get_send_buf().c_str(),
-			client->get_send_buf().size(), 0);
-	if (bytes < 0)
-		return (false);
-	client->erase_send(bytes);
-	if (client->get_send_buf().empty())
-		_pfds[i].events = POLLIN;
 	return (true);
 }
 
@@ -241,13 +243,15 @@ void	Server::queue_msg(Client &client, const std::string &msg)
 {
 	size_t	i;
 
+	if (client.is_closing())
+		return ;
 	std::cout << ">> [" << client.get_fd() << "] " << msg << std::endl;
 	client.append_send(msg + "\r\n");
 	i = 0;
 	while (i < _pfds.size())
 	{
 		if (_pfds[i].fd == client.get_fd())
-			_pfds[i].events = POLLIN | POLLOUT;
+			_pfds[i].events |= POLLOUT;
 		i++;
 	}
 }
@@ -263,14 +267,34 @@ void	Server::reply(Client &client, const std::string &code,
 	queue_msg(client, ":" SERVER_NAME " " + code + " " + target + " " + text);
 }
 
+void	Server::disconnect_client(Client &client, const std::string &reason)
+{
+	size_t	i;
+
+	if (client.is_closing())
+		return ;
+	queue_msg(client, "ERROR :Closing Link: " + client.get_ip()
+		+ " (" + reason + ")");
+	client.set_closing(true);
+	i = 0;
+	while (i < _pfds.size())
+	{
+		if (_pfds[i].fd == client.get_fd())
+			_pfds[i].events = POLLOUT;
+		i++;
+	}
+}
+
 void	Server::try_register(Client &client)
 {
-	if ((client.is_registered()) || (client.get_nick().empty())
-		|| (client.get_username().empty()))
+	if ((client.is_registered()) || (client.is_cap_negotiating()))
+		return ;
+	if ((client.get_nick().empty()) || (client.get_username().empty()))
 		return ;
 	if (!client.is_pass_ok())
 	{
 		reply(client, ERR_PASSWDMISMATCH, ":Password incorrect");
+		disconnect_client(client, "Password incorrect");
 		return ;
 	}
 	client.set_registered(true);

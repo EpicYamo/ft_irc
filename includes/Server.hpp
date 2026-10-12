@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/09 00:09:45 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 06:11:29 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class Server
 		void		handle_line(Client &client, const std::string &line);
 		bool		write_client(size_t i);
 		void		queue_msg(Client &client, const std::string &msg);
+		void		disconnect_client(Client &client, const std::string &reason);
 		void		reply(Client &client, const std::string &code,
 						const std::string &text);
 		void		try_register(Client &client);
