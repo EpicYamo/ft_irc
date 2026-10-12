@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 06:21:31 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 20:44:03 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ Server::Server(int port, const std::string &password)
 	_commands["PASS"] = &Server::cmd_pass;
 	_commands["NICK"] = &Server::cmd_nick;
 	_commands["USER"] = &Server::cmd_user;
+	_commands["PING"] = &Server::cmd_ping;
 }
 
 Server::~Server()
