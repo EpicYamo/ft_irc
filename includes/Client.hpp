@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/08 21:52:47 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 05:13:23 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Client
 		std::string	_realname;
 		bool		_pass_ok;
 		bool		_registered;
+		bool		_closing;
 
 		Client();
 
@@ -49,6 +50,7 @@ class Client
 		std::string			get_prefix() const;
 		bool				is_pass_ok() const;
 		bool				is_registered() const;
+		bool				is_closing() const;
 		void				set_nick(const std::string &nick);
 		void				set_user(const std::string &username,
 								const std::string &realname);

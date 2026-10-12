@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/10 22:11:17 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 05:17:46 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 static std::string	sys_error(const std::string &func);
 static bool			is_registration_cmd(const std::string &cmd);
+static bool			prefix_matches(const Client &client, const std::string &prefix);
 
 volatile sig_atomic_t	Server::_stop = 0;
 
@@ -178,7 +179,7 @@ bool	Server::read_client(size_t i)
 		return (false);
 	client = &(_clients.find(_pfds[i].fd)->second);
 	client->append_recv(buf, bytes);
-	while (client->extract_line(line))
+	while ((!client->is_closing()) && (client->extract_line(line)))
 		handle_line(*client, line);
 	return (true);
 }
@@ -219,6 +220,8 @@ void	Server::handle_line(Client &client, const std::string &line)
 
 	std::cout << "<< [" << client.get_fd() << "] " << line << std::endl;
 	if (!parse_message(line, msg))
+		return ;
+	if ((!msg.prefix.empty()) && (!prefix_matches(client, msg.prefix)))
 		return ;
 	if ((!client.is_registered()) && (!is_registration_cmd(msg.command)))
 	{
@@ -302,4 +305,14 @@ static bool	is_registration_cmd(const std::string &cmd)
 {
 	return ((cmd == "CAP") || (cmd == "PASS") || (cmd == "NICK")
 		|| (cmd == "USER") || (cmd == "PING") || (cmd == "QUIT"));
+}
+
+static bool	prefix_matches(const Client &client, const std::string &prefix)
+{
+	std::string	nick;
+
+	if (client.get_nick().empty())
+		return (false);
+	nick = prefix.substr(0, prefix.find_first_of("!@"));
+	return (irc_lower(nick) == irc_lower(client.get_nick()));
 }

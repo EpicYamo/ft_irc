@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/06 00:36:52 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/08 23:39:04 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 05:28:38 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,11 @@ bool	parse_message(const std::string &line, Message &msg)
 	msg.params.clear();
 	i = skip_spaces(line, 0);
 	if ((i < line.size()) && (line[i] == ':'))
+	{
 		i = skip_spaces(line, read_word(line, i + 1, msg.prefix));
+		if (msg.prefix.empty())
+			return (false);
+	}
 	i = skip_spaces(line, read_word(line, i, msg.command));
 	if (msg.command.empty())
 		return (false);
