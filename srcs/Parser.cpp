@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/06 00:36:52 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 05:28:38 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 20:11:33 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,16 @@ std::string	irc_lower(const std::string &str)
 	i = 0;
 	while (i < result.size())
 	{
-		result[i] = std::tolower(static_cast<unsigned char>(result[i]));
+		if (result[i] == '[')
+			result[i] = '{';
+		else if (result[i] == ']')
+			result[i] = '}';
+		else if (result[i] == '\\')
+			result[i] = '|';
+		else if (result[i] == '~')
+			result[i] = '^';
+		else
+			result[i] = std::tolower(static_cast<unsigned char>(result[i]));
 		i++;
 	}
 	return (result);
