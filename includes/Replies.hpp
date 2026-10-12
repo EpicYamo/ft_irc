@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/08 22:03:54 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 19:14:40 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@
 # define ERR_NEEDMOREPARAMS		"461"
 # define ERR_ALREADYREGISTRED	"462"
 # define ERR_PASSWDMISMATCH		"464"
+# define ERR_INVALIDCAPCMD		"410"
 
 #endif
