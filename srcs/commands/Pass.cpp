@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 01:50:48 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/09 01:50:53 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 08:14:26 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,10 @@ void	Server::cmd_pass(Client &client, const Message &msg)
 		reply(client, ERR_ALREADYREGISTRED, ":You may not reregister");
 		return ;
 	}
-	if (msg.params.empty())
+	if ((msg.params.empty()) || (msg.params[0].empty()))
 	{
 		reply(client, ERR_NEEDMOREPARAMS, "PASS :Not enough parameters");
 		return ;
 	}
-	if (msg.params[0] != _password)
-	{
-		reply(client, ERR_PASSWDMISMATCH, ":Password incorrect");
-		return ;
-	}
-	client.set_pass_ok(true);
+	client.set_pass_ok(msg.params[0] == _password);
 }
