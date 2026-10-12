@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 06:26:02 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/12 20:20:33 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define CLIENT_HPP
 
 # include <string>
+
+# define USERLEN 10
 
 class Client
 {
