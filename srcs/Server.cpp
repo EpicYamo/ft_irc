@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 21:04:21 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/13 01:52:57 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ Server::Server(int port, const std::string &password)
 	_commands["PING"] = &Server::cmd_ping;
 	_commands["PONG"] = &Server::cmd_pong;
 	_commands["QUIT"] = &Server::cmd_quit;
+	_commands["PRIVMSG"] = &Server::cmd_privmsg;
+	_commands["NOTICE"] = &Server::cmd_notice;
 }
 
 Server::~Server()

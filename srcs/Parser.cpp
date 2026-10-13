@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/06 00:36:52 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 20:11:33 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/13 02:22:54 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,25 @@ std::string	irc_lower(const std::string &str)
 		else
 			result[i] = std::tolower(static_cast<unsigned char>(result[i]));
 		i++;
+	}
+	return (result);
+}
+
+std::vector<std::string>	split_list(const std::string &str, char sep)
+{
+	std::vector<std::string>	result;
+	size_t						start;
+	size_t						end;
+
+	start = 0;
+	while (start <= str.size())
+	{
+		end = str.find(sep, start);
+		if (end == std::string::npos)
+			end = str.size();
+		if (end > start)
+			result.push_back(str.substr(start, end - start));
+		start = end + 1;
 	}
 	return (result);
 }

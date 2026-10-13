@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 20:42:57 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/13 04:22:25 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,8 @@
 # define ERR_INVALIDCAPCMD		"410"
 # define ERR_NOSUCHSERVER		"402"
 # define ERR_NOORIGIN			"409"
+# define ERR_NORECIPIENT		"411"
+# define ERR_NOTEXTTOSEND		"412"
+# define ERR_NOSUCHNICK			"401"
 
 #endif

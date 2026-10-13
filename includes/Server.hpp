@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 21:04:07 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/13 02:11:51 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ class Server
 		bool		write_client(size_t i);
 		void		queue_msg(Client &client, const std::string &msg);
 		void		disconnect_client(Client &client, const std::string &reason);
+		void		deliver_message(Client &client, const Message &msg,
+						bool is_notice);
+		void		send_to_user(Client &sender, const std::string &command,
+						const std::string &target, const std::string &text,
+						bool is_notice);
 		void		reply(Client &client, const std::string &code,
 						const std::string &text);
 		void		try_register(Client &client);
@@ -62,6 +67,8 @@ class Server
 		void		cmd_ping(Client &client, const Message &msg);
 		void		cmd_pong(Client &client, const Message &msg);
 		void		cmd_quit(Client &client, const Message &msg);
+		void		cmd_privmsg(Client &client, const Message &msg);
+		void		cmd_notice(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);
