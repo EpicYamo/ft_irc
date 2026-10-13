@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/13 01:52:57 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/13 05:10:32 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	Server::setup_signals()
 {
 	signal(SIGINT, Server::signal_handler);
 	signal(SIGQUIT, Server::signal_handler);
+	signal(SIGTERM, Server::signal_handler);
 	signal(SIGPIPE, SIG_IGN);
 }
 

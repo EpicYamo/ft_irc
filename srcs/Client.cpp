@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/13 04:52:30 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/13 05:00:50 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ bool	Client::is_closing() const
 	return (_closing);
 }
 
-bool	Client::is_cap_negotiating(void) const
+bool	Client::is_cap_negotiating() const
 {
 	return (_cap_negotiating);
 }
