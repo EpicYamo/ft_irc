@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 06:28:00 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/13 04:52:30 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,15 @@ bool	Client::extract_line(std::string &line)
 {
 	size_t	pos;
 
-	pos = _recv_buf.find('\n');
+	_recv_buf.erase(0, _recv_buf.find_first_not_of("\r\n"));
+	pos = _recv_buf.find_first_of("\r\n");
 	if (pos == std::string::npos)
 		return (false);
 	line = _recv_buf.substr(0, pos);
 	_recv_buf.erase(0, pos + 1);
-	if ((!line.empty()) && (line[line.size() - 1] == '\r'))
-		line.erase(line.size() - 1);
+	pos = line.find('\0');
+	if (pos != std::string::npos)
+		line.erase(pos);
 	return (true);
 }
 
