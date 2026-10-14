@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/13 04:22:25 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/14 06:04:38 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,9 @@
 # define ERR_NORECIPIENT		"411"
 # define ERR_NOTEXTTOSEND		"412"
 # define ERR_NOSUCHNICK			"401"
+# define RPL_TOPIC				"332"
+# define ERR_NOSUCHCHANNEL		"403"
+# define RPL_NAMREPLY			"353"
+# define RPL_ENDOFNAMES			"366"
 
 #endif

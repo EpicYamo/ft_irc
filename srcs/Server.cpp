@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/13 05:10:32 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/14 05:53:48 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ Server::Server(int port, const std::string &password)
 	_commands["QUIT"] = &Server::cmd_quit;
 	_commands["PRIVMSG"] = &Server::cmd_privmsg;
 	_commands["NOTICE"] = &Server::cmd_notice;
+	_commands["JOIN"] = &Server::cmd_join;
 }
 
 Server::~Server()
@@ -324,6 +325,30 @@ Client	*Server::find_client_by_nick(const std::string &nick)
 		it++;
 	}
 	return (NULL);
+}
+
+Channel	*Server::find_channel(const std::string &name)
+{
+	std::map<std::string, Channel>::iterator	it;
+
+	it = _channels.find(irc_lower(name));
+	if (it == _channels.end())
+		return (NULL);
+	return (&(it->second));
+}
+
+void	Server::broadcast(const Channel &channel, const std::string &msg,
+	Client *except)
+{
+	std::map<Client *, bool>::const_iterator	it;
+
+	it = channel.get_members().begin();
+	while (it != channel.get_members().end())
+	{
+		if (it->first != except)
+			queue_msg(*(it->first), msg);
+		it++;
+	}
 }
 
 static std::string	sys_error(const std::string &func)

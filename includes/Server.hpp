@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/13 04:59:25 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/14 06:05:16 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@
 # include "Client.hpp"
 # include "Parser.hpp"
 # include "Replies.hpp"
+# include "Channel.hpp"
 # include <string>
 # include <vector>
 # include <csignal>
 # include <poll.h>
 # include <map>
 # include <cstddef>
+
+# define MAX_MSG_LEN 510
 
 class Server
 {
@@ -34,6 +37,7 @@ class Server
 		std::vector<pollfd>				_pfds;
 		std::map<int, Client>			_clients;
 		std::map<std::string, t_cmd>	_commands;
+		std::map<std::string, Channel>	_channels;
 		static volatile sig_atomic_t	_stop;
 
 		Server();
@@ -53,6 +57,12 @@ class Server
 		void		disconnect_client(Client &client, const std::string &reason);
 		void		deliver_message(Client &client, const Message &msg,
 						bool is_notice);
+		void		join_channel(Client &client, const std::string &name,
+						const std::string &key);
+		void		part_all_channels(Client &client);
+		void		broadcast(const Channel &channel, const std::string &msg,
+						Client *except);
+		void		send_names(Client &client, const Channel &channel);
 		void		send_to_user(Client &sender, const std::string &command,
 						const std::string &target, const std::string &text,
 						bool is_notice);
@@ -60,6 +70,7 @@ class Server
 						const std::string &text);
 		void		try_register(Client &client);
 		Client		*find_client_by_nick(const std::string &nick);
+		Channel		*find_channel(const std::string &name);
 
 		void		cmd_cap(Client &client, const Message &msg);
 		void		cmd_pass(Client &client, const Message &msg);
@@ -70,6 +81,7 @@ class Server
 		void		cmd_quit(Client &client, const Message &msg);
 		void		cmd_privmsg(Client &client, const Message &msg);
 		void		cmd_notice(Client &client, const Message &msg);
+		void		cmd_join(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);
