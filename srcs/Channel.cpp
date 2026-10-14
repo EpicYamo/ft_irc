@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:38:13 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/14 05:38:20 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/15 01:33:19 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,14 @@ bool	Channel::has_member(Client *client) const
 void	Channel::add_member(Client *client, bool is_operator)
 {
 	_members.insert(std::make_pair(client, is_operator));
+}
+
+void	Channel::remove_member(Client *client)
+{
+	_members.erase(client);
+}
+
+bool	Channel::is_empty() const
+{
+	return (_members.empty());
 }

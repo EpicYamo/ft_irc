@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/14 06:05:16 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/14 20:33:31 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,9 @@ class Server
 		void		reply(Client &client, const std::string &code,
 						const std::string &text);
 		void		try_register(Client &client);
+		void		leave_all_channels(Client &client, const std::string &reason);
+		void		send_to_neighbors(Client &client, const std::string &msg,
+						bool include_self);
 		Client		*find_client_by_nick(const std::string &nick);
 		Channel		*find_channel(const std::string &name);
 

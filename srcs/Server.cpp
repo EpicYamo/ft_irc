@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/14 05:53:48 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/15 01:45:33 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <cstddef>
+#include <set>
 
 static std::string	sys_error(const std::string &func);
 static bool			is_registration_cmd(const std::string &cmd);
@@ -216,6 +217,10 @@ bool	Server::write_client(size_t i)
 
 void	Server::remove_client(size_t i)
 {
+	Client	*client;
+
+	client = &(_clients.find(_pfds[i].fd)->second);
+	leave_all_channels(*client, "Remote host closed the connection");
 	std::cout << "Client " << _pfds[i].fd << " disconnected" << std::endl;
 	close(_pfds[i].fd);
 	_clients.erase(_pfds[i].fd);
@@ -283,6 +288,7 @@ void	Server::disconnect_client(Client &client, const std::string &reason)
 	queue_msg(client, "ERROR :Closing Link: " + client.get_ip()
 		+ " (" + reason + ")");
 	client.set_closing(true);
+	leave_all_channels(client, reason);
 	i = 0;
 	while (i < _pfds.size())
 	{
@@ -348,6 +354,56 @@ void	Server::broadcast(const Channel &channel, const std::string &msg,
 		if (it->first != except)
 			queue_msg(*(it->first), msg);
 		it++;
+	}
+}
+
+void	Server::leave_all_channels(Client &client, const std::string &reason)
+{
+	std::map<std::string, Channel>::iterator	it;
+
+	send_to_neighbors(client, ":" + client.get_prefix() + " QUIT :" + reason,
+		false);
+	it = _channels.begin();
+	while (it != _channels.end())
+	{
+		it->second.remove_member(&client);
+		if (it->second.is_empty())
+			_channels.erase(it++);
+		else
+			it++;
+	}
+}
+
+void	Server::send_to_neighbors(Client &client, const std::string &msg,
+	bool include_self)
+{
+	std::set<Client *>							recipients;
+	std::set<Client *>::iterator				rit;
+	std::map<std::string, Channel>::iterator	cit;
+	std::map<Client *, bool>::const_iterator	mit;
+
+	if (include_self)
+		recipients.insert(&client);
+	cit = _channels.begin();
+	while (cit != _channels.end())
+	{
+		if (cit->second.has_member(&client))
+		{
+			mit = cit->second.get_members().begin();
+			while (mit != cit->second.get_members().end())
+			{
+				if (mit->first != &client)
+					recipients.insert(mit->first);
+				mit++;
+			}
+		}
+		cit++;
+	}
+	rit = recipients.begin();
+	while (rit != recipients.end())
+	{
+		queue_msg(**rit, msg);
+		rit++;
 	}
 }
 
