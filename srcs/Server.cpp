@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/15 01:45:33 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/15 23:20:59 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ Server::Server(int port, const std::string &password)
 	_commands["PRIVMSG"] = &Server::cmd_privmsg;
 	_commands["NOTICE"] = &Server::cmd_notice;
 	_commands["JOIN"] = &Server::cmd_join;
+	_commands["NAMES"] = &Server::cmd_names;
 }
 
 Server::~Server()
@@ -378,32 +379,32 @@ void	Server::send_to_neighbors(Client &client, const std::string &msg,
 	bool include_self)
 {
 	std::set<Client *>							recipients;
-	std::set<Client *>::iterator				rit;
-	std::map<std::string, Channel>::iterator	cit;
-	std::map<Client *, bool>::const_iterator	mit;
+	std::set<Client *>::iterator				rcp_it;
+	std::map<std::string, Channel>::iterator	ch_it;
+	std::map<Client *, bool>::const_iterator	mem_it;
 
 	if (include_self)
 		recipients.insert(&client);
-	cit = _channels.begin();
-	while (cit != _channels.end())
+	ch_it = _channels.begin();
+	while (ch_it != _channels.end())
 	{
-		if (cit->second.has_member(&client))
+		if (ch_it->second.has_member(&client))
 		{
-			mit = cit->second.get_members().begin();
-			while (mit != cit->second.get_members().end())
+			mem_it = ch_it->second.get_members().begin();
+			while (mem_it != ch_it->second.get_members().end())
 			{
-				if (mit->first != &client)
-					recipients.insert(mit->first);
-				mit++;
+				if (mem_it->first != &client)
+					recipients.insert(mem_it->first);
+				mem_it++;
 			}
 		}
-		cit++;
+		ch_it++;
 	}
-	rit = recipients.begin();
-	while (rit != recipients.end())
+	rcp_it = recipients.begin();
+	while (rcp_it != recipients.end())
 	{
-		queue_msg(**rit, msg);
-		rit++;
+		queue_msg(**rcp_it, msg);
+		rcp_it++;
 	}
 }
 

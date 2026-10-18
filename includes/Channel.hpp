@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:35:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/15 01:33:24 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/15 23:46:24 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <string>
 # include <map>
+# include <vector>
 
 class	Client;
 
@@ -40,6 +41,7 @@ class Channel
 		void							add_member(Client *client, bool is_operator);
 		void							remove_member(Client *client);
 		bool							is_empty() const;
+		std::vector<std::string>		get_member_names() const;
 };
 
 #endif

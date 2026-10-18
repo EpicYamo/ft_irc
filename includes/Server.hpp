@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/14 20:33:31 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 18:18:19 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,9 @@ class Server
 		void		leave_all_channels(Client &client, const std::string &reason);
 		void		send_to_neighbors(Client &client, const std::string &msg,
 						bool include_self);
+		void		send_all_names(Client &client);
+		void		send_namreply(Client &client, const std::string &field,
+						const std::vector<std::string> &entries);
 		Client		*find_client_by_nick(const std::string &nick);
 		Channel		*find_channel(const std::string &name);
 
@@ -85,6 +88,7 @@ class Server
 		void		cmd_privmsg(Client &client, const Message &msg);
 		void		cmd_notice(Client &client, const Message &msg);
 		void		cmd_join(Client &client, const Message &msg);
+		void		cmd_names(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);
