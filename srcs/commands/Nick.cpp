@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 01:53:15 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 20:06:29 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 19:35:57 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void	Server::cmd_nick(Client &client, const Message &msg)
 	old_prefix = client.get_prefix();
 	client.set_nick(msg.params[0]);
 	if (client.is_registered())
-		queue_msg(client, ":" + old_prefix + " NICK :" + client.get_nick());
+		send_to_neighbors(client, ":" + old_prefix + " NICK :"
+			+ client.get_nick(), true);
 	else
 		try_register(client);
 }
