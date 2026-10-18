@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:00:21 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/14 05:44:03 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 18:48:14 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	Server::cmd_join(Client &client, const Message &msg)
 }
 
 void	Server::join_channel(Client &client, const std::string &name,
-			const std::string &key)
+	const std::string &key)
 {
 	Channel	*channel;
 

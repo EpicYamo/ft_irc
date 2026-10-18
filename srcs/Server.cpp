@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/15 23:20:59 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 18:49:01 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <cstddef>
 #include <set>
 
 static std::string	sys_error(const std::string &func);

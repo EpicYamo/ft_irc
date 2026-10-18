@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/15 23:46:06 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 18:45:26 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ class Client
 		const std::string	&get_username() const;
 		const std::string	&get_realname() const;
 		std::string			get_prefix() const;
-		
+
 		bool				is_pass_ok() const;
 		bool				is_registered() const;
 		bool				is_closing() const;
-		bool				is_cap_negotiating(void) const;
+		bool				is_cap_negotiating() const;
 
 		void				set_nick(const std::string &nick);
 		void				set_user(const std::string &username,

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/13 01:44:31 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/13 04:22:36 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 18:47:45 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	Server::cmd_notice(Client &client, const Message &msg)
 }
 
 void	Server::deliver_message(Client &client, const Message &msg,
-			bool is_notice)
+	bool is_notice)
 {
 	std::vector<std::string>	targets;
 	size_t						i;
@@ -53,8 +53,7 @@ void	Server::deliver_message(Client &client, const Message &msg,
 }
 
 void	Server::send_to_user(Client &sender, const std::string &command,
-			const std::string &target, const std::string &text,
-			bool is_notice)
+	const std::string &target, const std::string &text, bool is_notice)
 {
 	Client	*recipient;
 

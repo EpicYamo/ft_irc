@@ -6,12 +6,11 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 01:48:04 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/12 19:20:39 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 18:48:48 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "Replies.hpp"
 
 void	Server::cmd_cap(Client &client, const Message &msg)
 {

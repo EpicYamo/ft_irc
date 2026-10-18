@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/14 06:04:38 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 18:51:11 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,17 @@
 # define RPL_CREATED			"003"
 # define RPL_MYINFO				"004"
 
+# define RPL_TOPIC				"332"
+# define RPL_NAMREPLY			"353"
+# define RPL_ENDOFNAMES			"366"
+
+# define ERR_NOSUCHNICK			"401"
+# define ERR_NOSUCHSERVER		"402"
+# define ERR_NOSUCHCHANNEL		"403"
+# define ERR_NOORIGIN			"409"
+# define ERR_INVALIDCAPCMD		"410"
+# define ERR_NORECIPIENT		"411"
+# define ERR_NOTEXTTOSEND		"412"
 # define ERR_UNKNOWNCOMMAND		"421"
 # define ERR_NONICKNAMEGIVEN	"431"
 # define ERR_ERRONEUSNICKNAME	"432"
@@ -28,15 +39,5 @@
 # define ERR_NEEDMOREPARAMS		"461"
 # define ERR_ALREADYREGISTRED	"462"
 # define ERR_PASSWDMISMATCH		"464"
-# define ERR_INVALIDCAPCMD		"410"
-# define ERR_NOSUCHSERVER		"402"
-# define ERR_NOORIGIN			"409"
-# define ERR_NORECIPIENT		"411"
-# define ERR_NOTEXTTOSEND		"412"
-# define ERR_NOSUCHNICK			"401"
-# define RPL_TOPIC				"332"
-# define ERR_NOSUCHCHANNEL		"403"
-# define RPL_NAMREPLY			"353"
-# define RPL_ENDOFNAMES			"366"
 
 #endif
