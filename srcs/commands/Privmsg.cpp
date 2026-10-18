@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/13 01:44:31 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 18:47:45 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 19:23:11 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,12 @@ void	Server::deliver_message(Client &client, const Message &msg,
 	i = 0;
 	while (i < targets.size())
 	{
-		send_to_user(client, msg.command, targets[i], msg.params[1],
-			is_notice);
+		if ((targets[i][0] == '#') || (targets[i][0] == '&'))
+			send_to_channel(client, msg.command, targets[i], msg.params[1],
+				is_notice);
+		else
+			send_to_user(client, msg.command, targets[i], msg.params[1],
+				is_notice);
 		i++;
 	}
 }
@@ -66,4 +70,20 @@ void	Server::send_to_user(Client &sender, const std::string &command,
 	}
 	queue_msg(*recipient, ":" + sender.get_prefix() + " " + command + " "
 		+ recipient->get_nick() + " :" + text);
+}
+
+void	Server::send_to_channel(Client &sender, const std::string &command,
+	const std::string &target, const std::string &text, bool is_notice)
+{
+	Channel	*channel;
+
+	channel = find_channel(target);
+	if (channel == NULL)
+	{
+		if (!is_notice)
+			reply(sender, ERR_NOSUCHNICK, target + " :No such nick/channel");
+		return ;
+	}
+	broadcast(*channel, ":" + sender.get_prefix() + " " + command + " "
+		+ channel->get_name() + " :" + text, &sender);
 }

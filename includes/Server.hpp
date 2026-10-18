@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 19:05:29 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 19:21:43 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ class Server
 						Client *except);
 		void		send_names(Client &client, const Channel &channel);
 		void		send_to_user(Client &sender, const std::string &command,
+						const std::string &target, const std::string &text,
+						bool is_notice);
+		void		send_to_channel(Client &sender, const std::string &command,
 						const std::string &target, const std::string &text,
 						bool is_notice);
 		void		reply(Client &client, const std::string &code,
