@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 18:18:19 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 19:05:29 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ class Server
 		void		join_channel(Client &client, const std::string &name,
 						const std::string &key);
 		void		part_all_channels(Client &client);
+		void		part_channel(Client &client, Channel &channel,
+						const std::string &reason);
 		void		broadcast(const Channel &channel, const std::string &msg,
 						Client *except);
 		void		send_names(Client &client, const Channel &channel);
@@ -89,6 +91,7 @@ class Server
 		void		cmd_notice(Client &client, const Message &msg);
 		void		cmd_join(Client &client, const Message &msg);
 		void		cmd_names(Client &client, const Message &msg);
+		void		cmd_part(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);

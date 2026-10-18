@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 18:49:01 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 19:05:40 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ Server::Server(int port, const std::string &password)
 	_commands["NOTICE"] = &Server::cmd_notice;
 	_commands["JOIN"] = &Server::cmd_join;
 	_commands["NAMES"] = &Server::cmd_names;
+	_commands["PART"] = &Server::cmd_part;
 }
 
 Server::~Server()

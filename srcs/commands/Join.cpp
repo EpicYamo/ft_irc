@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:00:21 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 18:48:14 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/18 19:11:13 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,17 @@ void	Server::join_channel(Client &client, const std::string &name,
 
 void	Server::part_all_channels(Client &client)
 {
-	(void)client;
+	std::map<std::string, Channel>::iterator	ch_it;
+	Channel										*channel;
+
+	ch_it = _channels.begin();
+	while (ch_it != _channels.end())
+	{
+		channel = &(ch_it->second);
+		ch_it++;
+		if (channel->has_member(&client))
+			part_channel(client, *channel, client.get_nick());
+	}
 }
 
 static bool	is_valid_channel_name(const std::string &name)
