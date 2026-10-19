@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/19 22:45:18 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:56:41 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define ERR_NONICKNAMEGIVEN	"431"
 # define ERR_ERRONEUSNICKNAME	"432"
 # define ERR_NICKNAMEINUSE		"433"
+# define ERR_USERNOTINCHANNEL	"441"
 # define ERR_NOTONCHANNEL		"442"
 # define ERR_NOTREGISTERED		"451"
 # define ERR_NEEDMOREPARAMS		"461"

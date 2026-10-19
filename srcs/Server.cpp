@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/19 22:47:50 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:57:18 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ Server::Server(int port, const std::string &password)
 	_commands["PART"] = &Server::cmd_part;
 	_commands["MODE"] = &Server::cmd_mode;
 	_commands["TOPIC"] = &Server::cmd_topic;
+	_commands["KICK"] = &Server::cmd_kick;
 }
 
 Server::~Server()
