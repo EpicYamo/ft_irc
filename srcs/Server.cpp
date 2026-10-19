@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 19:05:40 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:29:26 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ Server::Server(int port, const std::string &password)
 	_commands["JOIN"] = &Server::cmd_join;
 	_commands["NAMES"] = &Server::cmd_names;
 	_commands["PART"] = &Server::cmd_part;
+	_commands["MODE"] = &Server::cmd_mode;
 }
 
 Server::~Server()
@@ -317,7 +318,7 @@ void	Server::try_register(Client &client)
 	reply(client, RPL_YOURHOST, ":Your host is " SERVER_NAME
 		", running version 1.0");
 	reply(client, RPL_CREATED, ":This server was created for 42");
-	reply(client, RPL_MYINFO, SERVER_NAME " 1.0 o itkol");
+	reply(client, RPL_MYINFO, SERVER_NAME " 1.0 i itkol");
 }
 
 Client	*Server::find_client_by_nick(const std::string &nick)

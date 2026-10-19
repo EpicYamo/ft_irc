@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 18:45:26 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:22:20 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Client
 		bool		_registered;
 		bool		_closing;
 		bool		_cap_negotiating;
+		bool		_invisible;
 
 		Client();
 
@@ -56,6 +57,7 @@ class Client
 		bool				is_registered() const;
 		bool				is_closing() const;
 		bool				is_cap_negotiating() const;
+		bool				is_invisible() const;
 
 		void				set_nick(const std::string &nick);
 		void				set_user(const std::string &username,
@@ -64,6 +66,7 @@ class Client
 		void				set_registered(bool value);
 		void				set_closing(bool value);
 		void				set_cap_negotiating(bool value);
+		void				set_invisible(bool value);
 };
 
 #endif

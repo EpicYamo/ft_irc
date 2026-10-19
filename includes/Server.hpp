@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 19:21:43 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:28:36 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ class Server
 		void		send_all_names(Client &client);
 		void		send_namreply(Client &client, const std::string &field,
 						const std::vector<std::string> &entries);
+		void		user_mode(Client &client, const Message &msg);
+		void		channel_mode(Client &client, const Message &msg);
 		Client		*find_client_by_nick(const std::string &nick);
 		Channel		*find_channel(const std::string &name);
 
@@ -95,6 +97,7 @@ class Server
 		void		cmd_join(Client &client, const Message &msg);
 		void		cmd_names(Client &client, const Message &msg);
 		void		cmd_part(Client &client, const Message &msg);
+		void		cmd_mode(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);

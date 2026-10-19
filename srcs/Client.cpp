@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/13 05:00:50 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:24:52 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 Client::Client()
 	: _fd(-1), _ip(""), _recv_buf(""), _send_buf(""), _nick(""),
 	_username(""), _realname(""), _pass_ok(false), _registered(false),
-	_closing(false), _cap_negotiating(false) {}
+	_closing(false), _cap_negotiating(false), _invisible(false) {}
 
 Client::Client(int fd, const std::string &ip)
 	: _fd(fd), _ip(ip), _recv_buf(""), _send_buf(""), _nick(""),
 	_username(""), _realname(""), _pass_ok(false), _registered(false),
-	_closing(false), _cap_negotiating(false) {}
+	_closing(false), _cap_negotiating(false), _invisible(false) {}
 
 Client::Client(const Client &other)
 	: _fd(other._fd), _ip(other._ip), _recv_buf(other._recv_buf),
@@ -46,6 +46,7 @@ Client	&Client::operator=(const Client &other)
 		_registered = other._registered;
 		_closing = other._closing;
 		_cap_negotiating = other._cap_negotiating;
+   		_invisible = other._invisible;
 	}
 	return (*this);
 }
@@ -165,4 +166,14 @@ void	Client::set_closing(bool value)
 void	Client::set_cap_negotiating(bool value)
 {
 	_cap_negotiating = value;
+}
+
+bool	Client::is_invisible() const
+{
+	return (_invisible);
+}
+
+void	Client::set_invisible(bool value)
+{
+	_invisible = value;
 }

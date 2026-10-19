@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 19:04:53 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:25:23 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # define RPL_YOURHOST			"002"
 # define RPL_CREATED			"003"
 # define RPL_MYINFO				"004"
+
+# define RPL_UMODEIS			"221"
 
 # define RPL_TOPIC				"332"
 # define RPL_NAMREPLY			"353"
@@ -40,5 +42,7 @@
 # define ERR_NEEDMOREPARAMS		"461"
 # define ERR_ALREADYREGISTRED	"462"
 # define ERR_PASSWDMISMATCH		"464"
+# define ERR_UMODEUNKNOWNFLAG	"501"
+# define ERR_USERSDONTMATCH		"502"
 
 #endif
