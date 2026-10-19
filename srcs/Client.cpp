@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/19 22:24:52 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:42:37 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ Client	&Client::operator=(const Client &other)
 		_registered = other._registered;
 		_closing = other._closing;
 		_cap_negotiating = other._cap_negotiating;
-   		_invisible = other._invisible;
+		_invisible = other._invisible;
 	}
 	return (*this);
 }

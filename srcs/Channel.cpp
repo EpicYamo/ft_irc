@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:38:13 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/17 01:43:37 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:44:12 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 #include "Client.hpp"
 
 Channel::Channel()
-	: _name(""), _topic(""), _members() {}
+	: _name(""), _topic(""), _members(), _topic_restricted(false) {}
 
 Channel::Channel(const std::string &name)
-	: _name(name), _topic(""), _members() {}
+	: _name(name), _topic(""), _members(), _topic_restricted(false) {}
 
 Channel::Channel(const Channel &other)
-	: _name(other._name), _topic(other._topic), _members(other._members) {}
+	: _name(other._name), _topic(other._topic), _members(other._members),
+	_topic_restricted(other._topic_restricted) {}
 
 Channel::~Channel() {}
 
@@ -31,6 +32,7 @@ Channel	&Channel::operator=(const Channel &other)
 		_name = other._name;
 		_topic = other._topic;
 		_members = other._members;
+		_topic_restricted = other._topic_restricted;
 	}
 	return (*this);
 }
@@ -85,4 +87,29 @@ std::vector<std::string>	Channel::get_member_names() const
 		it++;
 	}
 	return (names);
+}
+
+bool	Channel::is_operator(Client *client) const
+{
+	std::map<Client *, bool>::const_iterator	it;
+
+	it = _members.find(client);
+	if (it == _members.end())
+		return (false);
+	return (it->second);
+}
+
+bool	Channel::is_topic_restricted() const
+{
+	return (_topic_restricted);
+}
+
+void	Channel::set_topic(const std::string &topic)
+{
+	_topic = topic;
+}
+
+void	Channel::set_topic_restricted(bool value)
+{
+	_topic_restricted = value;
 }

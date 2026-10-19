@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:35:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/15 23:46:24 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/19 22:43:29 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class Channel
 		std::string					_name;
 		std::string					_topic;
 		std::map<Client *, bool>	_members;
+		bool						_topic_restricted;
 
 		Channel();
 
@@ -42,6 +43,10 @@ class Channel
 		void							remove_member(Client *client);
 		bool							is_empty() const;
 		std::vector<std::string>		get_member_names() const;
+		bool							is_operator(Client *client) const;
+		bool							is_topic_restricted() const;
+		void							set_topic(const std::string &topic);
+		void							set_topic_restricted(bool value);
 };
 
 #endif
