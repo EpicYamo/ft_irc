@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/19 22:57:02 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 04:23:24 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <cstddef>
 
 # define MAX_MSG_LEN 510
+# define MAX_MODE_PARAMS 3
 
 class Server
 {
@@ -84,6 +85,15 @@ class Server
 						const std::string &nick, const std::string &reason);
 		void		user_mode(Client &client, const Message &msg);
 		void		channel_mode(Client &client, const Message &msg);
+		void		send_channel_modes(Client &client, const Channel &channel);
+		void		apply_channel_modes(Client &client, Channel &channel,
+						const Message &msg);
+		bool		apply_mode(Client &client, Channel &channel, char mode,
+						bool adding, const std::string &param, std::string &shown);
+		bool		apply_key(Client &client, Channel &channel, bool adding,
+						const std::string &param, std::string &shown);
+		bool		apply_operator(Client &client, Channel &channel, bool adding,
+						const std::string &nick, std::string &shown);
 		Client		*find_client_by_nick(const std::string &nick);
 		Channel		*find_channel(const std::string &name);
 

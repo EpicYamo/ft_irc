@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/19 22:42:37 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 05:30:58 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ Client::Client(const Client &other)
 	_send_buf(other._send_buf), _nick(other._nick),
 	_username(other._username), _realname(other._realname),
 	_pass_ok(other._pass_ok), _registered(other._registered),
-	_closing(other._closing), _cap_negotiating(other._cap_negotiating) {}
+	_closing(other._closing), _cap_negotiating(other._cap_negotiating),
+	_invisible(other._invisible) {}
 
 Client::~Client() {}
 

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/19 22:56:41 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 04:22:52 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 # define RPL_UMODEIS			"221"
 
+# define RPL_CHANNELMODEIS		"324"
 # define RPL_NOTOPIC			"331"
 # define RPL_TOPIC				"332"
 # define RPL_NAMREPLY			"353"
@@ -44,6 +45,8 @@
 # define ERR_NEEDMOREPARAMS		"461"
 # define ERR_ALREADYREGISTRED	"462"
 # define ERR_PASSWDMISMATCH		"464"
+# define ERR_KEYSET				"467"
+# define ERR_UNKNOWNMODE		"472"
 # define ERR_CHANOPRIVSNEEDED	"482"
 # define ERR_UMODEUNKNOWNFLAG	"501"
 # define ERR_USERSDONTMATCH		"502"
