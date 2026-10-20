@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 05:39:44 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 06:51:37 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ class Server
 		void		cmd_mode(Client &client, const Message &msg);
 		void		cmd_topic(Client &client, const Message &msg);
 		void		cmd_kick(Client &client, const Message &msg);
+		void		cmd_invite(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);

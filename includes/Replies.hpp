@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 05:39:13 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 06:50:43 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define RPL_CHANNELMODEIS		"324"
 # define RPL_NOTOPIC			"331"
 # define RPL_TOPIC				"332"
+# define RPL_INVITING			"341"
 # define RPL_NAMREPLY			"353"
 # define RPL_ENDOFNAMES			"366"
 
@@ -41,6 +42,7 @@
 # define ERR_NICKNAMEINUSE		"433"
 # define ERR_USERNOTINCHANNEL	"441"
 # define ERR_NOTONCHANNEL		"442"
+# define ERR_USERONCHANNEL		"443"
 # define ERR_NOTREGISTERED		"451"
 # define ERR_NEEDMOREPARAMS		"461"
 # define ERR_ALREADYREGISTRED	"462"
