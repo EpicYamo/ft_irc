@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:38:13 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 05:37:58 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 00:55:08 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,23 @@ bool	Channel::is_empty() const
 	return (_members.empty());
 }
 
-std::vector<std::string>	Channel::get_member_names() const
+std::vector<std::string>	Channel::get_member_names(Client *viewer) const
 {
 	std::vector<std::string>					names;
 	std::map<Client *, bool>::const_iterator	it;
+	bool										show_all;
 
+	show_all = has_member(viewer);
 	it = _members.begin();
 	while (it != _members.end())
 	{
-		if (it->second)
-			names.push_back("@" + it->first->get_nick());
-		else
-			names.push_back(it->first->get_nick());
+		if ((show_all) || (!it->first->is_invisible()))
+		{
+			if (it->second)
+				names.push_back("@" + it->first->get_nick());
+			else
+				names.push_back(it->first->get_nick());
+		}
 		it++;
 	}
 	return (names);

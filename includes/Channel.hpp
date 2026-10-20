@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:35:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 05:36:09 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 00:54:36 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class Channel
 		void							add_member(Client *client, bool is_operator);
 		void							remove_member(Client *client);
 		bool							is_empty() const;
-		std::vector<std::string>		get_member_names() const;
+		std::vector<std::string>		get_member_names(Client *viewer) const;
 		bool							is_operator(Client *client) const;
 		bool							is_topic_restricted() const;
 		bool							is_invite_only() const;

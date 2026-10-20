@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 23:19:16 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 00:59:11 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -351,6 +351,23 @@ void	Server::try_register(Client &client)
 		", running version 1.0");
 	reply(client, RPL_CREATED, ":This server was created for 42");
 	reply(client, RPL_MYINFO, SERVER_NAME " 1.0 i itkol");
+}
+
+bool	Server::is_visible(Client &viewer, Client &target)
+{
+	std::map<std::string, Channel>::iterator	ch_it;
+
+	if ((&viewer == &target) || (!target.is_invisible()))
+		return (true);
+	ch_it = _channels.begin();
+	while (ch_it != _channels.end())
+	{
+		if ((ch_it->second.has_member(&viewer))
+			&& (ch_it->second.has_member(&target)))
+			return (true);
+		ch_it++;
+	}
+	return (false);
 }
 
 Client	*Server::find_client_by_nick(const std::string &nick)

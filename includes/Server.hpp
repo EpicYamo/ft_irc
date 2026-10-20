@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 23:13:05 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 00:57:59 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ class Server
 						const std::string &param, std::string &shown);
 		bool		apply_operator(Client &client, Channel &channel, bool adding,
 						const std::string &nick, std::string &shown);
+		bool		is_visible(Client &viewer, Client &target);
 		Client		*find_client_by_nick(const std::string &nick);
 		Channel		*find_channel(const std::string &name);
 

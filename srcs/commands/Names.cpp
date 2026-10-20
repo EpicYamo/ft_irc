@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:42:25 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 23:19:02 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 01:04:36 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	Server::send_all_names(Client &client)
 	while (ch_it != _channels.end())
 	{
 		send_list_reply(client, RPL_NAMREPLY, "= " + ch_it->second.get_name(),
-			ch_it->second.get_member_names());
+			ch_it->second.get_member_names(&client));
 		mem_it = ch_it->second.get_members().begin();
 		while (mem_it != ch_it->second.get_members().end())
 		{
@@ -67,7 +67,8 @@ void	Server::send_all_names(Client &client)
 	while (cl_it != _clients.end())
 	{
 		if ((cl_it->second.is_registered()) && (!cl_it->second.is_closing())
-			&& (in_channel.count(&cl_it->second) == 0))
+			&& (in_channel.count(&cl_it->second) == 0)
+			&& (is_visible(client, cl_it->second)))
 			no_channel.push_back(cl_it->second.get_nick());
 		cl_it++;
 	}
@@ -78,6 +79,6 @@ void	Server::send_all_names(Client &client)
 void	Server::send_names(Client &client, const Channel &channel)
 {
 	send_list_reply(client, RPL_NAMREPLY, "= " + channel.get_name(),
-		channel.get_member_names());
+		channel.get_member_names(&client));
 	reply(client, RPL_ENDOFNAMES, channel.get_name() + " :End of NAMES list");
 }
