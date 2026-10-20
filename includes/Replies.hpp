@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 06:50:43 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 23:10:37 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,17 @@
 
 # define RPL_UMODEIS			"221"
 
+# define RPL_WHOISUSER			"311"
+# define RPL_WHOISSERVER		"312"
+# define RPL_ENDOFWHO			"315"
+# define RPL_ENDOFWHOIS			"318"
+# define RPL_WHOISCHANNELS		"319"
+
 # define RPL_CHANNELMODEIS		"324"
 # define RPL_NOTOPIC			"331"
 # define RPL_TOPIC				"332"
 # define RPL_INVITING			"341"
+# define RPL_WHOREPLY			"352"
 # define RPL_NAMREPLY			"353"
 # define RPL_ENDOFNAMES			"366"
 

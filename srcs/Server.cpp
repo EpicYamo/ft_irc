@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 06:51:23 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 23:19:16 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ Server::Server(int port, const std::string &password)
 	_commands["TOPIC"] = &Server::cmd_topic;
 	_commands["KICK"] = &Server::cmd_kick;
 	_commands["INVITE"] = &Server::cmd_invite;
+	_commands["WHOIS"] = &Server::cmd_whois;
 }
 
 Server::~Server()
@@ -282,6 +283,34 @@ void	Server::reply(Client &client, const std::string &code,
 	if (target.empty())
 		target = "*";
 	queue_msg(client, ":" SERVER_NAME " " + code + " " + target + " " + text);
+}
+
+void	Server::send_list_reply(Client &client, const std::string &code,
+	const std::string &field, const std::vector<std::string> &entries)
+{
+	std::string	header;
+	std::string	list;
+	size_t		i;
+
+	header = ":" SERVER_NAME " " + code + " " + client.get_nick()
+		+ " " + field + " :";
+	i = 0;
+	while (i < entries.size())
+	{
+		if ((!list.empty())
+			&& (header.size() + list.size() + 1 + entries[i].size()
+				> MAX_MSG_LEN))
+		{
+			reply(client, code, field + " :" + list);
+			list.clear();
+		}
+		if (!list.empty())
+			list += " ";
+		list += entries[i];
+		i++;
+	}
+	if (!list.empty())
+		reply(client, code, field + " :" + list);
 }
 
 void	Server::disconnect_client(Client &client, const std::string &reason)

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:42:25 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 18:25:05 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 23:19:02 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	Server::send_all_names(Client &client)
 	ch_it = _channels.begin();
 	while (ch_it != _channels.end())
 	{
-		send_namreply(client, "= " + ch_it->second.get_name(),
+		send_list_reply(client, RPL_NAMREPLY, "= " + ch_it->second.get_name(),
 			ch_it->second.get_member_names());
 		mem_it = ch_it->second.get_members().begin();
 		while (mem_it != ch_it->second.get_members().end())
@@ -71,41 +71,13 @@ void	Server::send_all_names(Client &client)
 			no_channel.push_back(cl_it->second.get_nick());
 		cl_it++;
 	}
-	send_namreply(client, "* *", no_channel);
+	send_list_reply(client, RPL_NAMREPLY, "* *", no_channel);
 	reply(client, RPL_ENDOFNAMES, "* :End of NAMES list");
 }
 
 void	Server::send_names(Client &client, const Channel &channel)
 {
-	send_namreply(client, "= " + channel.get_name(),
+	send_list_reply(client, RPL_NAMREPLY, "= " + channel.get_name(),
 		channel.get_member_names());
 	reply(client, RPL_ENDOFNAMES, channel.get_name() + " :End of NAMES list");
-}
-
-void	Server::send_namreply(Client &client, const std::string &field,
-	const std::vector<std::string> &entries)
-{
-	std::string	header;
-	std::string	names;
-	size_t		i;
-
-	header = ":" SERVER_NAME " " RPL_NAMREPLY " " + client.get_nick()
-		+ " " + field + " :";
-	i = 0;
-	while (i < entries.size())
-	{
-		if ((!names.empty())
-			&& (header.size() + names.size() + 1 + entries[i].size()
-				> MAX_MSG_LEN))
-		{
-			reply(client, RPL_NAMREPLY, field + " :" + names);
-			names.clear();
-		}
-		if (!names.empty())
-			names += " ";
-		names += entries[i];
-		i++;
-	}
-	if (!names.empty())
-		reply(client, RPL_NAMREPLY, field + " :" + names);
 }

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 06:51:37 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 23:13:05 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 # define MAX_MSG_LEN 510
 # define MAX_MODE_PARAMS 3
+# define MAX_TARGETS 20
 
 class Server
 {
@@ -81,8 +82,10 @@ class Server
 		void		send_to_neighbors(Client &client, const std::string &msg,
 						bool include_self);
 		void		send_all_names(Client &client);
-		void		send_namreply(Client &client, const std::string &field,
+		void		send_list_reply(Client &client, const std::string &code,
+						const std::string &field,
 						const std::vector<std::string> &entries);
+		void		whois_user(Client &client, const std::string &nick);
 		void		kick_user(Client &op, const std::string &chan_name,
 						const std::string &nick, const std::string &reason);
 		void		user_mode(Client &client, const Message &msg);
@@ -115,6 +118,7 @@ class Server
 		void		cmd_topic(Client &client, const Message &msg);
 		void		cmd_kick(Client &client, const Message &msg);
 		void		cmd_invite(Client &client, const Message &msg);
+		void		cmd_whois(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);
