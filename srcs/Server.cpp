@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/21 00:59:11 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 01:21:05 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ Server::Server(int port, const std::string &password)
 	_commands["KICK"] = &Server::cmd_kick;
 	_commands["INVITE"] = &Server::cmd_invite;
 	_commands["WHOIS"] = &Server::cmd_whois;
+	_commands["WHO"] = &Server::cmd_who;
 }
 
 Server::~Server()

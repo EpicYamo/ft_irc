@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 22:29:40 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 05:09:34 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 01:40:50 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static bool		takes_param(char mode, bool adding);
 static bool		apply_limit(Channel &channel, bool adding,
 					const std::string &param, std::string &shown);
 static size_t	parse_limit(const std::string &str);
+static bool		is_ban_query(const std::string &modes);
 static void		add_change(std::string &modes, std::string &values, char &sign,
 					bool adding, char mode, const std::string &shown);
 
@@ -105,6 +106,12 @@ void	Server::channel_mode(Client &client, const Message &msg)
 	if (msg.params.size() < 2)
 	{
 		send_channel_modes(client, *channel);
+		return ;
+	}
+	if ((msg.params.size() == 2) && (is_ban_query(msg.params[1])))
+	{
+		reply(client, RPL_ENDOFBANLIST,
+			channel->get_name() + " :End of channel ban list");
 		return ;
 	}
 	if (!channel->has_member(&client))
@@ -336,4 +343,9 @@ static void	add_change(std::string &modes, std::string &values, char &sign,
 	modes += mode;
 	if (!shown.empty())
 		values += " " + shown;
+}
+
+static bool	is_ban_query(const std::string &modes)
+{
+	return ((modes == "b") || (modes == "+b") || (modes == "-b"));
 }

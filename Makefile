@@ -8,7 +8,7 @@ SRCS		:= main.cpp Server.cpp Client.cpp Parser.cpp Channel.cpp \
 				commands/Quit.cpp commands/Privmsg.cpp commands/Join.cpp \
 				commands/Names.cpp commands/Part.cpp commands/Mode.cpp \
 				commands/Topic.cpp commands/Kick.cpp commands/Invite.cpp \
-				commands/Whois.cpp
+				commands/Whois.cpp commands/Who.cpp
 HDRS		:= Server.hpp Client.hpp Parser.hpp Replies.hpp Channel.hpp
 OBJS		:= $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 HEADERS		:= $(addprefix $(INC_DIR)/, $(HDRS))

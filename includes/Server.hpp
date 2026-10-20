@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/21 00:57:59 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 02:03:17 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,11 @@ class Server
 						const std::string &field,
 						const std::vector<std::string> &entries);
 		void		whois_user(Client &client, const std::string &nick);
+		void		who_channel(Client &client, const std::string &name);
+		void		who_mask(Client &client, const std::string &mask);
+		void		send_who_user(Client &client, Client &target);
+		void		send_whoreply(Client &client, Client &target,
+						const std::string &chan_field, bool is_op);
 		void		kick_user(Client &op, const std::string &chan_name,
 						const std::string &nick, const std::string &reason);
 		void		user_mode(Client &client, const Message &msg);
@@ -120,6 +125,7 @@ class Server
 		void		cmd_kick(Client &client, const Message &msg);
 		void		cmd_invite(Client &client, const Message &msg);
 		void		cmd_whois(Client &client, const Message &msg);
+		void		cmd_who(Client &client, const Message &msg);
 
 	public:
 		Server(int port, const std::string &password);

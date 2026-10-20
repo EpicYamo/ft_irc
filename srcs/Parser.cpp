@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/06 00:36:52 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/13 02:22:54 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 01:59:50 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,4 +123,42 @@ std::vector<std::string>	split_list(const std::string &str, char sep)
 		start = end + 1;
 	}
 	return (result);
+}
+
+bool	match_mask(const std::string &mask, const std::string &str)
+{
+	size_t	m;
+	size_t	s;
+	size_t	star;
+	size_t	retry;
+
+	m = 0;
+	s = 0;
+	star = std::string::npos;
+	retry = 0;
+	while (s < str.size())
+	{
+		if ((m < mask.size()) && ((mask[m] == '?') || (mask[m] == str[s])))
+		{
+			m++;
+			s++;
+		}
+		else if ((m < mask.size()) && (mask[m] == '*'))
+		{
+			star = m;
+			retry = s;
+			m++;
+		}
+		else if (star != std::string::npos)
+		{
+			m = star + 1;
+			retry++;
+			s = retry;
+		}
+		else
+			return (false);
+	}
+	while ((m < mask.size()) && (mask[m] == '*'))
+		m++;
+	return (m == mask.size());
 }

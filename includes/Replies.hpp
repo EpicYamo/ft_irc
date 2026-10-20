@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 23:10:37 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/21 01:39:09 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define RPL_WHOREPLY			"352"
 # define RPL_NAMREPLY			"353"
 # define RPL_ENDOFNAMES			"366"
+# define RPL_ENDOFBANLIST		"368"
 
 # define ERR_NOSUCHNICK			"401"
 # define ERR_NOSUCHSERVER		"402"
