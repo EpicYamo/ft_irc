@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:00:21 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 19:11:13 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 05:41:26 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	Server::join_channel(Client &client, const std::string &name,
 {
 	Channel	*channel;
 
-	(void)key;
 	if (!is_valid_channel_name(name))
 	{
 		reply(client, ERR_NOSUCHCHANNEL, name + " :No such channel");
@@ -66,14 +65,45 @@ void	Server::join_channel(Client &client, const std::string &name,
 	}
 	else if (channel->has_member(&client))
 		return ;
+	else if (!can_join(client, *channel, key))
+		return ;
 	else
+	{
 		channel->add_member(&client, false);
+		channel->remove_invite(&client);
+	}
 	broadcast(*channel, ":" + client.get_prefix() + " JOIN "
 		+ channel->get_name(), NULL);
 	if (!channel->get_topic().empty())
 		reply(client, RPL_TOPIC, channel->get_name() + " :"
 			+ channel->get_topic());
 	send_names(client, *channel);
+}
+
+bool	Server::can_join(Client &client, const Channel &channel,
+	const std::string &key)
+{
+	if ((!channel.get_key().empty()) && (key != channel.get_key()))
+	{
+		reply(client, ERR_BADCHANNELKEY,
+			channel.get_name() + " :Cannot join channel (+k)");
+		return (false);
+	}
+	if ((channel.is_invite_only()) && (!channel.is_invited(&client)))
+	{
+		reply(client, ERR_INVITEONLYCHAN,
+			channel.get_name() + " :Cannot join channel (+i)");
+		return (false);
+	}
+	if ((channel.get_limit() > 0)
+		&& (channel.get_members().size() >= channel.get_limit())
+		&& (!channel.is_invited(&client)))
+	{
+		reply(client, ERR_CHANNELISFULL,
+			channel.get_name() + " :Cannot join channel (+l)");
+		return (false);
+	}
+	return (true);
 }
 
 void	Server::part_all_channels(Client &client)

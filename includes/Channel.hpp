@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:35:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 04:21:25 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 05:36:09 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <string>
 # include <map>
 # include <vector>
+# include <set>
 
 class	Client;
 
@@ -29,6 +30,7 @@ class Channel
 		bool						_invite_only;
 		std::string					_key;
 		size_t						_limit;
+		std::set<Client *>			_invited;
 
 		Channel();
 
@@ -57,6 +59,9 @@ class Channel
 		void							set_key(const std::string &key);
 		void							set_limit(size_t limit);
 		void							set_operator(Client *client, bool value);
+		bool							is_invited(Client *client) const;
+		void							add_invite(Client *client);
+		void							remove_invite(Client *client);
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 04:23:24 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 05:39:44 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ class Server
 		void		deliver_message(Client &client, const Message &msg,
 						bool is_notice);
 		void		join_channel(Client &client, const std::string &name,
+						const std::string &key);
+		bool		can_join(Client &client, const Channel &channel,
 						const std::string &key);
 		void		part_all_channels(Client &client);
 		void		part_channel(Client &client, Channel &channel,

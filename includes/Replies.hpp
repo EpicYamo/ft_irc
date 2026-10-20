@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 04:22:52 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 05:39:13 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@
 # define ERR_ALREADYREGISTRED	"462"
 # define ERR_PASSWDMISMATCH		"464"
 # define ERR_KEYSET				"467"
+# define ERR_CHANNELISFULL		"471"
 # define ERR_UNKNOWNMODE		"472"
+# define ERR_INVITEONLYCHAN		"473"
+# define ERR_BADCHANNELKEY		"475"
 # define ERR_CHANOPRIVSNEEDED	"482"
 # define ERR_UMODEUNKNOWNFLAG	"501"
 # define ERR_USERSDONTMATCH		"502"

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:38:13 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 04:21:41 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/20 05:37:58 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,17 @@
 
 Channel::Channel()
 	: _name(""), _topic(""), _members(), _topic_restricted(false),
-	_invite_only(false), _key(""), _limit(0) {}
+	_invite_only(false), _key(""), _limit(0), _invited() {}
 
 Channel::Channel(const std::string &name)
 	: _name(name), _topic(""), _members(), _topic_restricted(false),
-	_invite_only(false), _key(""), _limit(0) {}
+	_invite_only(false), _key(""), _limit(0), _invited() {}
 
 Channel::Channel(const Channel &other)
 	: _name(other._name), _topic(other._topic), _members(other._members),
 	_topic_restricted(other._topic_restricted),
-	_invite_only(other._invite_only), _key(other._key), _limit(other._limit) {}
+	_invite_only(other._invite_only), _key(other._key), _limit(other._limit),
+	_invited(other._invited) {}
 
 Channel::~Channel() {}
 
@@ -39,6 +40,7 @@ Channel	&Channel::operator=(const Channel &other)
 		_invite_only = other._invite_only;
 		_key = other._key;
 		_limit = other._limit;
+		_invited = other._invited;
 	}
 	return (*this);
 }
@@ -71,6 +73,7 @@ void	Channel::add_member(Client *client, bool is_operator)
 void	Channel::remove_member(Client *client)
 {
 	_members.erase(client);
+	_invited.erase(client);
 }
 
 bool	Channel::is_empty() const
@@ -157,4 +160,19 @@ void	Channel::set_operator(Client *client, bool value)
 	it = _members.find(client);
 	if (it != _members.end())
 		it->second = value;
+}
+
+bool	Channel::is_invited(Client *client) const
+{
+	return (_invited.find(client) != _invited.end());
+}
+
+void	Channel::add_invite(Client *client)
+{
+	_invited.insert(client);
+}
+
+void	Channel::remove_invite(Client *client)
+{
+	_invited.erase(client);
 }
