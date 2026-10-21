@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 05:30:58 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 01:53:03 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ bool	Client::extract_line(std::string &line)
 	pos = line.find('\0');
 	if (pos != std::string::npos)
 		line.erase(pos);
+	if (line.size() > MAX_MSG_LEN)
+		line.erase(MAX_MSG_LEN);
 	return (true);
 }
 
@@ -96,6 +98,12 @@ const std::string	&Client::get_send_buf() const
 void	Client::erase_send(size_t len)
 {
 	_send_buf.erase(0, len);
+}
+
+void	Client::release_buffers()
+{
+	std::string().swap(_recv_buf);
+	std::string().swap(_send_buf);
 }
 
 const std::string	&Client::get_nick() const
@@ -172,6 +180,11 @@ void	Client::set_cap_negotiating(bool value)
 bool	Client::is_invisible() const
 {
 	return (_invisible);
+}
+
+bool	Client::is_recv_overflow() const
+{
+	return (_recv_buf.size() > MAX_RECV_LEN);
 }
 
 void	Client::set_invisible(bool value)

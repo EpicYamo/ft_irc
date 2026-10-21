@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/19 22:22:20 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 01:52:37 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <string>
 
 # define USERLEN 10
+# define MAX_MSG_LEN 510
+# define MAX_RECV_LEN 8192
 
 class Client
 {
@@ -48,6 +50,7 @@ class Client
 		void				append_send(const std::string &data);
 		const std::string	&get_send_buf() const;
 		void				erase_send(size_t len);
+		void				release_buffers();
 		const std::string	&get_nick() const;
 		const std::string	&get_username() const;
 		const std::string	&get_realname() const;
@@ -67,6 +70,7 @@ class Client
 		void				set_closing(bool value);
 		void				set_cap_negotiating(bool value);
 		void				set_invisible(bool value);
+		bool				is_recv_overflow() const;
 };
 
 #endif

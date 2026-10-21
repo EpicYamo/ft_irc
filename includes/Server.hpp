@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/21 02:03:17 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 02:36:19 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # include <map>
 # include <cstddef>
 
-# define MAX_MSG_LEN 510
 # define MAX_MODE_PARAMS 3
 # define MAX_TARGETS 20
 
@@ -53,6 +52,8 @@ class Server
 		void		accept_client();
 		bool		read_client(size_t i);
 		void		remove_client(size_t i);
+		void		drop_client(size_t i);
+		void		remove_client_quietly(size_t i);
 		void		handle_line(Client &client, const std::string &line);
 		bool		write_client(size_t i);
 		void		queue_msg(Client &client, const std::string &msg);

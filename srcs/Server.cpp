@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/21 01:21:05 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 02:38:26 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <set>
+#include <new>
 
 static std::string	sys_error(const std::string &func);
 static bool			is_registration_cmd(const std::string &cmd);
@@ -143,15 +144,23 @@ void	Server::handle_events()
 		}
 		else
 		{
-			if (_pfds[i].revents & POLLIN)
-				removed = !read_client(i);
-			else if (_pfds[i].revents & (POLLHUP | POLLERR | POLLNVAL))
+			try
+			{
+				if (_pfds[i].revents & POLLIN)
+					removed = !read_client(i);
+				else if (_pfds[i].revents & (POLLHUP | POLLERR | POLLNVAL))
+					removed = true;
+				if ((!removed) && (_pfds[i].revents & POLLOUT))
+					removed = !write_client(i);
+			}
+			catch (const std::bad_alloc &)
+			{
+				_clients.find(_pfds[i].fd)->second.release_buffers();
 				removed = true;
-			if ((!removed) && (_pfds[i].revents & POLLOUT))
-				removed = !write_client(i);
+			}
 		}
 		if (removed)
-			remove_client(i);
+			drop_client(i);
 		else
 			i++;
 	}
@@ -176,8 +185,18 @@ void	Server::accept_client()
 	pfd.fd = fd;
 	pfd.events = POLLIN;
 	pfd.revents = 0;
-	_pfds.push_back(pfd);
-	_clients.insert(std::make_pair(fd, Client(fd, inet_ntoa(addr.sin_addr))));
+	try
+	{
+		_clients.insert(std::make_pair(fd,
+			Client(fd, inet_ntoa(addr.sin_addr))));
+		_pfds.push_back(pfd);
+	}
+	catch (const std::bad_alloc &)
+	{
+		_clients.erase(fd);
+		close(fd);
+		return ;
+	}
 	std::cout << "Client " << fd << " connected from "
 		<< inet_ntoa(addr.sin_addr) << std::endl;
 }
@@ -196,6 +215,8 @@ bool	Server::read_client(size_t i)
 	client->append_recv(buf, bytes);
 	while ((!client->is_closing()) && (client->extract_line(line)))
 		handle_line(*client, line);
+	if ((!client->is_closing()) && (client->is_recv_overflow()))
+		disconnect_client(*client, "Excess Flood");
 	return (true);
 }
 
@@ -234,6 +255,40 @@ void	Server::remove_client(size_t i)
 	_pfds.erase(_pfds.begin() + i);
 }
 
+void	Server::drop_client(size_t i)
+{
+	try
+	{
+		remove_client(i);
+	}
+	catch (const std::bad_alloc &)
+	{
+		remove_client_quietly(i);
+	}
+}
+
+void	Server::remove_client_quietly(size_t i)
+{
+	std::map<std::string, Channel>::iterator	ch_it;
+	Client										*client;
+	int											fd;
+
+	fd = _pfds[i].fd;
+	client = &(_clients.find(fd)->second);
+	ch_it = _channels.begin();
+	while (ch_it != _channels.end())
+	{
+		ch_it->second.remove_member(client);
+		if (ch_it->second.is_empty())
+			_channels.erase(ch_it++);
+		else
+			ch_it++;
+	}
+	close(fd);
+	_clients.erase(fd);
+	_pfds.erase(_pfds.begin() + i);
+}
+
 void	Server::handle_line(Client &client, const std::string &line)
 {
 	Message									msg;
@@ -260,12 +315,16 @@ void	Server::handle_line(Client &client, const std::string &line)
 
 void	Server::queue_msg(Client &client, const std::string &msg)
 {
-	size_t	i;
+	std::string	line;
+	size_t		i;
 
 	if (client.is_closing())
 		return ;
-	std::cout << ">> [" << client.get_fd() << "] " << msg << std::endl;
-	client.append_send(msg + "\r\n");
+	line = msg;
+	if (line.size() > MAX_MSG_LEN)
+		line.erase(MAX_MSG_LEN);
+	std::cout << ">> [" << client.get_fd() << "] " << line << std::endl;
+	client.append_send(line + "\r\n");
 	i = 0;
 	while (i < _pfds.size())
 	{
