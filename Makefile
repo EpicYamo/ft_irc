@@ -12,6 +12,11 @@ SRCS		:= main.cpp Server.cpp Client.cpp Parser.cpp Channel.cpp \
 HDRS		:= Server.hpp Client.hpp Parser.hpp Replies.hpp Channel.hpp
 OBJS		:= $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 HEADERS		:= $(addprefix $(INC_DIR)/, $(HDRS))
+BONUS_NAME	:= ircbot
+BONUS_DIR	:= bonus
+BONUS_SRCS	:= main.cpp Bot.cpp
+BONUS_OBJS	:= $(addprefix $(OBJ_DIR)/$(BONUS_DIR)/, $(BONUS_SRCS:.cpp=.o)) \
+				$(OBJ_DIR)/Parser.o
 CPP			:= c++
 CPPFLAGS	:= -Wall -Wextra -Werror -std=c++98 -I$(INC_DIR)
 RM			:= rm -rf
@@ -25,12 +30,22 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADERS)
 	@mkdir -p $(dir $@)
 	$(CPP) $(CPPFLAGS) -c $< -o $@
 
+bonus: $(BONUS_NAME)
+
+$(BONUS_NAME): $(BONUS_OBJS)
+	$(CPP) $(CPPFLAGS) -o $(BONUS_NAME) $(BONUS_OBJS)
+
+$(OBJ_DIR)/$(BONUS_DIR)/%.o: $(BONUS_DIR)/%.cpp $(BONUS_DIR)/Bot.hpp \
+		$(INC_DIR)/Parser.hpp
+	@mkdir -p $(dir $@)
+	$(CPP) $(CPPFLAGS) -I$(BONUS_DIR) -c $< -o $@
+
 clean:
 	$(RM) $(OBJ_DIR)
 
 fclean: clean
-	$(RM) $(NAME)
+	$(RM) $(NAME) $(BONUS_NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re

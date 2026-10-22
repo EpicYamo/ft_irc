@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 20:29:34 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 22:29:15 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <set>
 #include <new>
 #include <ctime>
+#include <sstream>
 
 static std::string	sys_error(const std::string &func);
 static bool			is_registration_cmd(const std::string &cmd);
@@ -548,6 +549,8 @@ void	Server::disconnect_client(Client &client, const std::string &reason)
 
 void	Server::try_register(Client &client)
 {
+	std::ostringstream	isupport;
+
 	if ((client.is_registered()) || (client.is_cap_negotiating()))
 		return ;
 	if ((client.get_nick().empty()) || (client.get_username().empty()))
@@ -565,10 +568,13 @@ void	Server::try_register(Client &client)
 		", running version 1.0");
 	reply(client, RPL_CREATED, ":This server was created for 42");
 	reply(client, RPL_MYINFO, SERVER_NAME " 1.0 i itkol");
-	reply(client, RPL_ISUPPORT, "CHANTYPES=#& PREFIX=(o)@ CHANMODES=,k,l,it"
-		" MODES=3 NICKLEN=9 CHANNELLEN=50 CHANLIMIT=#&:20"
-		" TARGMAX=PRIVMSG:20,NOTICE:20,WHOIS:20 CASEMAPPING=rfc1459"
-		" :are supported by this server");
+	isupport << "CHANTYPES=#& PREFIX=(o)@ CHANMODES=,k,l,it MODES="
+		<< MAX_MODE_PARAMS << " NICKLEN=" << NICKLEN << " CHANNELLEN=50"
+		<< " CHANLIMIT=#&:" << MAX_CHANNELS << " TARGMAX=PRIVMSG:"
+		<< MAX_TARGETS << ",NOTICE:" << MAX_TARGETS << ",WHOIS:"
+		<< MAX_TARGETS << " CASEMAPPING=rfc1459";
+	reply(client, RPL_ISUPPORT, isupport.str()
+		+ " :are supported by this server");
 }
 
 bool	Server::is_visible(Client &viewer, Client &target)

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 20:28:03 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 22:27:51 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define MAX_MSG_LEN 510
 # define MAX_RECV_LEN 8192
 # define MAX_SEND_LEN 262144
+# define NICKLEN 30
 
 class Client
 {

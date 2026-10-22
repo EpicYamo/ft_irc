@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/09 01:53:15 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 19:35:57 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 22:28:05 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static bool	is_valid_nick(const std::string &nick)
 {
 	size_t	i;
 
-	if (nick.size() > 9)
+	if (nick.size() > NICKLEN)
 		return (false);
 	if ((!std::isalpha(static_cast<unsigned char>(nick[0])))
 		&& (!is_special(nick[0])))
