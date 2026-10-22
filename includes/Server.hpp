@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 03:14:02 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 07:20:57 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@
 # define MAX_MODE_PARAMS 3
 # define MAX_TARGETS 20
 # define MAX_CHANNELS 20
+# define POLL_TIMEOUT 1000
+# define REG_TIMEOUT 60
+# define PING_INTERVAL 120
+# define PING_TIMEOUT 120
+# define CLOSE_TIMEOUT 10
 
 class Server
 {
@@ -37,6 +42,7 @@ class Server
 		std::string						_password;
 		int								_listen_fd;
 		int								_spare_fd;
+		time_t							_paused_since;
 		std::vector<pollfd>				_pfds;
 		std::map<int, Client>			_clients;
 		std::map<std::string, t_cmd>	_commands;
@@ -57,6 +63,9 @@ class Server
 		void		drop_client(size_t i);
 		void		remove_client_quietly(size_t i);
 		void		remove_sendq_exceeded();
+		void		check_timeouts();
+		bool		is_timed_out(Client &client, time_t now);
+		void		set_listening(bool value);
 		void		handle_line(Client &client, const std::string &line);
 		bool		write_client(size_t i);
 		void		queue_msg(Client &client, const std::string &msg);

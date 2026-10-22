@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 03:12:24 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 07:20:10 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@ Client::Client()
 	: _fd(-1), _ip(""), _recv_buf(""), _send_buf(""), _nick(""),
 	_username(""), _realname(""), _pass_ok(false), _registered(false),
 	_closing(false), _cap_negotiating(false), _invisible(false),
-	_sendq_exceeded(false) {}
+	_sendq_exceeded(false), _ping_sent(false), _connect_time(0),
+	_last_activity(0), _closing_time(0) {}
 
 Client::Client(int fd, const std::string &ip)
 	: _fd(fd), _ip(ip), _recv_buf(""), _send_buf(""), _nick(""),
 	_username(""), _realname(""), _pass_ok(false), _registered(false),
 	_closing(false), _cap_negotiating(false), _invisible(false),
-	_sendq_exceeded(false) {}
+	_sendq_exceeded(false), _ping_sent(false), _connect_time(time(NULL)),
+	_last_activity(time(NULL)), _closing_time(0) {}
 
 Client::Client(const Client &other)
 	: _fd(other._fd), _ip(other._ip), _recv_buf(other._recv_buf),
@@ -30,7 +32,9 @@ Client::Client(const Client &other)
 	_username(other._username), _realname(other._realname),
 	_pass_ok(other._pass_ok), _registered(other._registered),
 	_closing(other._closing), _cap_negotiating(other._cap_negotiating),
-	_invisible(other._invisible), _sendq_exceeded(other._sendq_exceeded) {}
+	_invisible(other._invisible), _sendq_exceeded(other._sendq_exceeded),
+	_ping_sent(other._ping_sent), _connect_time(other._connect_time),
+	_last_activity(other._last_activity), _closing_time(other._closing_time) {}
 
 Client::~Client() {}
 
@@ -51,6 +55,10 @@ Client	&Client::operator=(const Client &other)
 		_cap_negotiating = other._cap_negotiating;
 		_invisible = other._invisible;
 		_sendq_exceeded = other._sendq_exceeded;
+		_ping_sent = other._ping_sent;
+		_connect_time = other._connect_time;
+		_last_activity = other._last_activity;
+		_closing_time = other._closing_time;
 	}
 	return (*this);
 }
@@ -129,6 +137,21 @@ std::string	Client::get_prefix() const
 	return (_nick + "!" + _username + "@" + _ip);
 }
 
+time_t	Client::get_connect_time() const
+{
+	return (_connect_time);
+}
+
+time_t	Client::get_last_activity() const
+{
+	return (_last_activity);
+}
+
+time_t	Client::get_closing_time() const
+{
+	return (_closing_time);
+}
+
 bool	Client::is_pass_ok() const
 {
 	return (_pass_ok);
@@ -173,6 +196,8 @@ void	Client::set_registered(bool value)
 void	Client::set_closing(bool value)
 {
 	_closing = value;
+	if (value)
+		_closing_time = time(NULL);
 }
 
 void	Client::set_cap_negotiating(bool value)
@@ -195,6 +220,11 @@ bool	Client::is_sendq_exceeded() const
 	return (_sendq_exceeded);
 }
 
+bool	Client::is_ping_sent() const
+{
+	return (_ping_sent);
+}
+
 void	Client::set_invisible(bool value)
 {
 	_invisible = value;
@@ -203,4 +233,14 @@ void	Client::set_invisible(bool value)
 void	Client::set_sendq_exceeded(bool value)
 {
 	_sendq_exceeded = value;
+}
+
+void	Client::set_ping_sent(bool value)
+{
+	_ping_sent = value;
+}
+
+void	Client::set_last_activity(time_t value)
+{
+	_last_activity = value;
 }

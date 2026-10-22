@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 03:22:39 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 07:26:08 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <arpa/inet.h>
 #include <set>
 #include <new>
+#include <ctime>
 
 static std::string	sys_error(const std::string &func);
 static bool			is_registration_cmd(const std::string &cmd);
@@ -30,7 +31,8 @@ static bool			prefix_matches(const Client &client, const std::string &prefix);
 volatile sig_atomic_t	Server::_stop = 0;
 
 Server::Server(int port, const std::string &password)
-	: _port(port), _password(password), _listen_fd(-1), _spare_fd(-1)
+	: _port(port), _password(password), _listen_fd(-1), _spare_fd(-1),
+	_paused_since(0)
 {
 	_commands["CAP"] = &Server::cmd_cap;
 	_commands["PASS"] = &Server::cmd_pass;
@@ -88,7 +90,7 @@ void	Server::run()
 	std::cout << "Server listening on port " << _port << std::endl;
 	while (!_stop)
 	{
-		if (poll(&_pfds[0], _pfds.size(), -1) < 0)
+		if (poll(&_pfds[0], _pfds.size(), POLL_TIMEOUT) < 0)
 		{
 			if (_stop)
 				break ;
@@ -96,6 +98,7 @@ void	Server::run()
 		}
 		handle_events();
 		remove_sendq_exceeded();
+		check_timeouts();
 	}
 	std::cout << std::endl << "Server shutting down" << std::endl;
 }
@@ -188,10 +191,14 @@ void	Server::accept_client()
 		if (fd >= 0)
 			close(fd);
 		_spare_fd = socket(AF_INET, SOCK_STREAM, 0);
-		return ;
+		if (fd >= 0)
+			return ;
 	}
 	if (fd < 0)
+	{
+		set_listening(false);
 		return ;
+	}
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
 	{
 		close(fd);
@@ -227,6 +234,8 @@ bool	Server::read_client(size_t i)
 	if (bytes <= 0)
 		return (false);
 	client = &(_clients.find(_pfds[i].fd)->second);
+	client->set_last_activity(time(NULL));
+	client->set_ping_sent(false);
 	client->append_recv(buf, bytes);
 	while ((!client->is_closing()) && (client->extract_line(line)))
 		handle_line(*client, line);
@@ -320,6 +329,71 @@ void	Server::remove_sendq_exceeded()
 			drop_client(i);
 		else
 			i++;
+	}
+}
+
+void	Server::check_timeouts()
+{
+	std::map<int, Client>::iterator	cl_it;
+	time_t							now;
+	size_t							i;
+
+	now = time(NULL);
+	if ((_paused_since != 0) && (now > _paused_since))
+		set_listening(true);
+	i = 0;
+	while (i < _pfds.size())
+	{
+		cl_it = _clients.find(_pfds[i].fd);
+		if ((cl_it != _clients.end()) && (is_timed_out(cl_it->second, now)))
+			drop_client(i);
+		else
+			i++;
+	}
+}
+
+bool	Server::is_timed_out(Client &client, time_t now)
+{
+	try
+	{
+		if (client.is_closing())
+			return (now - client.get_closing_time() >= CLOSE_TIMEOUT);
+		if (!client.is_registered())
+		{
+			if (now - client.get_connect_time() >= REG_TIMEOUT)
+				disconnect_client(client, "Registration timeout");
+		}
+		else if (now - client.get_last_activity()
+			>= PING_INTERVAL + PING_TIMEOUT)
+			disconnect_client(client, "Ping timeout");
+		else if ((!client.is_ping_sent())
+			&& (now - client.get_last_activity() >= PING_INTERVAL))
+		{
+			queue_msg(client, "PING :" SERVER_NAME);
+			client.set_ping_sent(true);
+		}
+	}
+	catch (const std::bad_alloc &)
+	{
+		client.release_buffers();
+		return (true);
+	}
+	return (false);
+}
+
+void	Server::set_listening(bool value)
+{
+	if (value)
+	{
+		if (_spare_fd < 0)
+			_spare_fd = socket(AF_INET, SOCK_STREAM, 0);
+		_pfds[0].events = POLLIN;
+		_paused_since = 0;
+	}
+	else
+	{
+		_pfds[0].events = 0;
+		_paused_since = time(NULL);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 03:10:09 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 07:16:03 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CLIENT_HPP
 
 # include <string>
+# include <ctime>
 
 # define USERLEN 10
 # define MAX_MSG_LEN 510
@@ -36,6 +37,10 @@ class Client
 		bool		_cap_negotiating;
 		bool		_invisible;
 		bool		_sendq_exceeded;
+		bool		_ping_sent;
+		time_t		_connect_time;
+		time_t		_last_activity;
+		time_t		_closing_time;
 
 		Client();
 
@@ -57,6 +62,9 @@ class Client
 		const std::string	&get_username() const;
 		const std::string	&get_realname() const;
 		std::string			get_prefix() const;
+		time_t				get_connect_time() const;
+		time_t				get_last_activity() const;
+		time_t				get_closing_time() const;
 
 		bool				is_pass_ok() const;
 		bool				is_registered() const;
@@ -73,8 +81,11 @@ class Client
 		void				set_cap_negotiating(bool value);
 		void				set_invisible(bool value);
 		void				set_sendq_exceeded(bool value);
+		void				set_ping_sent(bool value);
+		void				set_last_activity(time_t value);
 		bool				is_recv_overflow() const;
 		bool				is_sendq_exceeded() const;
+		bool				is_ping_sent() const;
 };
 
 #endif
