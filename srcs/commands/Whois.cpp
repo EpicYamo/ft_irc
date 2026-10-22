@@ -6,11 +6,12 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/20 23:19:51 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 23:20:01 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 20:36:10 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <sstream>
 
 void	Server::cmd_whois(Client &client, const Message &msg)
 {
@@ -48,6 +49,7 @@ void	Server::whois_user(Client &client, const std::string &nick)
 	Client										*target;
 	std::map<std::string, Channel>::iterator	ch_it;
 	std::vector<std::string>					chans;
+	std::ostringstream							idle_info;
 
 	target = find_client_by_nick(nick);
 	if ((target == NULL) || (!target->is_registered()))
@@ -71,5 +73,9 @@ void	Server::whois_user(Client &client, const std::string &nick)
 	send_list_reply(client, RPL_WHOISCHANNELS, target->get_nick(), chans);
 	reply(client, RPL_WHOISSERVER, target->get_nick() + " " SERVER_NAME
 		" :ft_irc server");
+	idle_info << (time(NULL) - target->get_last_message()) << " "
+		<< target->get_connect_time();
+	reply(client, RPL_WHOISIDLE, target->get_nick() + " " + idle_info.str()
+		+ " :seconds idle, signon time");
 	reply(client, RPL_ENDOFWHOIS, nick + " :End of WHOIS list");
 }

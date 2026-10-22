@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/13 01:44:31 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/18 19:23:11 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 20:30:31 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,9 @@ void	Server::deliver_message(Client &client, const Message &msg,
 			reply(client, ERR_NOTEXTTOSEND, ":No text to send");
 		return ;
 	}
+	client.set_last_message(time(NULL));
 	i = 0;
-	while (i < targets.size())
+	while ((i < targets.size()) && (i < MAX_TARGETS))
 	{
 		if ((targets[i][0] == '#') || (targets[i][0] == '&'))
 			send_to_channel(client, msg.command, targets[i], msg.params[1],

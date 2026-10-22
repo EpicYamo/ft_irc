@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 08:03:24 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 20:29:34 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -565,6 +565,10 @@ void	Server::try_register(Client &client)
 		", running version 1.0");
 	reply(client, RPL_CREATED, ":This server was created for 42");
 	reply(client, RPL_MYINFO, SERVER_NAME " 1.0 i itkol");
+	reply(client, RPL_ISUPPORT, "CHANTYPES=#& PREFIX=(o)@ CHANMODES=,k,l,it"
+		" MODES=3 NICKLEN=9 CHANNELLEN=50 CHANLIMIT=#&:20"
+		" TARGMAX=PRIVMSG:20,NOTICE:20,WHOIS:20 CASEMAPPING=rfc1459"
+		" :are supported by this server");
 }
 
 bool	Server::is_visible(Client &viewer, Client &target)

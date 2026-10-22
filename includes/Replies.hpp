@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 03:12:39 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 20:27:20 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@
 # define RPL_YOURHOST			"002"
 # define RPL_CREATED			"003"
 # define RPL_MYINFO				"004"
+# define RPL_ISUPPORT			"005"
 
 # define RPL_UMODEIS			"221"
 
 # define RPL_WHOISUSER			"311"
 # define RPL_WHOISSERVER		"312"
 # define RPL_ENDOFWHO			"315"
+# define RPL_WHOISIDLE			"317"
 # define RPL_ENDOFWHOIS			"318"
 # define RPL_WHOISCHANNELS		"319"
 
