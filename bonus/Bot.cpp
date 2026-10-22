@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/22 21:42:11 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 22:46:13 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 23:13:17 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,6 @@ void	Bot::handle_line(const std::string &line)
 			<< std::endl;
 		_stop = 1;
 	}
-	else if (msg.command == "JOIN")
-		on_join(msg, nick);
 	else if (msg.command == "PRIVMSG")
 		on_privmsg(msg, nick);
 	else if (msg.command == "ERROR")
