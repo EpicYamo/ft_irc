@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 22:01:32 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/21 01:39:09 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 03:12:39 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 # define ERR_NOSUCHNICK			"401"
 # define ERR_NOSUCHSERVER		"402"
 # define ERR_NOSUCHCHANNEL		"403"
+# define ERR_TOOMANYCHANNELS	"405"
 # define ERR_NOORIGIN			"409"
 # define ERR_INVALIDCAPCMD		"410"
 # define ERR_NORECIPIENT		"411"

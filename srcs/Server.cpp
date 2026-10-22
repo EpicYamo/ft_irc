@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 02:38:26 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 03:22:39 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static bool			prefix_matches(const Client &client, const std::string &prefix);
 volatile sig_atomic_t	Server::_stop = 0;
 
 Server::Server(int port, const std::string &password)
-	: _port(port), _password(password), _listen_fd(-1)
+	: _port(port), _password(password), _listen_fd(-1), _spare_fd(-1)
 {
 	_commands["CAP"] = &Server::cmd_cap;
 	_commands["PASS"] = &Server::cmd_pass;
@@ -65,6 +65,8 @@ Server::~Server()
 	}
 	if (_listen_fd >= 0)
 		close(_listen_fd);
+	if (_spare_fd >= 0)
+		close(_spare_fd);
 }
 
 void	Server::signal_handler(int sig)
@@ -93,6 +95,7 @@ void	Server::run()
 			throw std::runtime_error(sys_error("poll"));
 		}
 		handle_events();
+		remove_sendq_exceeded();
 	}
 	std::cout << std::endl << "Server shutting down" << std::endl;
 }
@@ -126,6 +129,7 @@ void	Server::setup_socket()
 		throw std::runtime_error(sys_error("bind"));
 	if (listen(_listen_fd, SOMAXCONN) < 0)
 		throw std::runtime_error(sys_error("listen"));
+	_spare_fd = socket(AF_INET, SOCK_STREAM, 0);
 }
 
 void	Server::handle_events()
@@ -173,8 +177,19 @@ void	Server::accept_client()
 	int			fd;
 	pollfd		pfd;
 
+	if (_spare_fd < 0)
+		_spare_fd = socket(AF_INET, SOCK_STREAM, 0);
 	len = sizeof(addr);
 	fd = accept(_listen_fd, reinterpret_cast<sockaddr *>(&addr), &len);
+	if ((fd < 0) && (_spare_fd >= 0))
+	{
+		close(_spare_fd);
+		fd = accept(_listen_fd, NULL, NULL);
+		if (fd >= 0)
+			close(fd);
+		_spare_fd = socket(AF_INET, SOCK_STREAM, 0);
+		return ;
+	}
 	if (fd < 0)
 		return ;
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) < 0)
@@ -248,7 +263,10 @@ void	Server::remove_client(size_t i)
 	Client	*client;
 
 	client = &(_clients.find(_pfds[i].fd)->second);
-	leave_all_channels(*client, "Remote host closed the connection");
+	if (client->is_sendq_exceeded())
+		leave_all_channels(*client, "SendQ exceeded");
+	else
+		leave_all_channels(*client, "Remote host closed the connection");
 	std::cout << "Client " << _pfds[i].fd << " disconnected" << std::endl;
 	close(_pfds[i].fd);
 	_clients.erase(_pfds[i].fd);
@@ -289,6 +307,22 @@ void	Server::remove_client_quietly(size_t i)
 	_pfds.erase(_pfds.begin() + i);
 }
 
+void	Server::remove_sendq_exceeded()
+{
+	std::map<int, Client>::iterator	cl_it;
+	size_t							i;
+
+	i = 0;
+	while (i < _pfds.size())
+	{
+		cl_it = _clients.find(_pfds[i].fd);
+		if ((cl_it != _clients.end()) && (cl_it->second.is_sendq_exceeded()))
+			drop_client(i);
+		else
+			i++;
+	}
+}
+
 void	Server::handle_line(Client &client, const std::string &line)
 {
 	Message									msg;
@@ -318,11 +352,16 @@ void	Server::queue_msg(Client &client, const std::string &msg)
 	std::string	line;
 	size_t		i;
 
-	if (client.is_closing())
+	if ((client.is_closing()) || (client.is_sendq_exceeded()))
 		return ;
 	line = msg;
 	if (line.size() > MAX_MSG_LEN)
 		line.erase(MAX_MSG_LEN);
+	if (client.get_send_buf().size() + line.size() + 2 > MAX_SEND_LEN)
+	{
+		client.set_sendq_exceeded(true);
+		return ;
+	}
 	std::cout << ">> [" << client.get_fd() << "] " << line << std::endl;
 	client.append_send(line + "\r\n");
 	i = 0;
@@ -428,6 +467,22 @@ bool	Server::is_visible(Client &viewer, Client &target)
 		ch_it++;
 	}
 	return (false);
+}
+
+size_t	Server::count_channels(Client &client)
+{
+	std::map<std::string, Channel>::iterator	ch_it;
+	size_t										count;
+
+	count = 0;
+	ch_it = _channels.begin();
+	while (ch_it != _channels.end())
+	{
+		if (ch_it->second.has_member(&client))
+			count++;
+		ch_it++;
+	}
+	return (count);
 }
 
 Client	*Server::find_client_by_nick(const std::string &nick)

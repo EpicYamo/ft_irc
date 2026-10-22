@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/14 05:00:21 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/20 05:41:26 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 03:24:22 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,20 @@ void	Server::join_channel(Client &client, const std::string &name,
 		return ;
 	}
 	channel = find_channel(name);
+	if ((channel != NULL) && (channel->has_member(&client)))
+		return ;
+	if (count_channels(client) >= MAX_CHANNELS)
+	{
+		reply(client, ERR_TOOMANYCHANNELS, name
+			+ " :You have joined too many channels");
+		return ;
+	}
 	if (channel == NULL)
 	{
 		_channels.insert(std::make_pair(irc_lower(name), Channel(name)));
 		channel = find_channel(name);
 		channel->add_member(&client, true);
 	}
-	else if (channel->has_member(&client))
-		return ;
 	else if (!can_join(client, *channel, key))
 		return ;
 	else

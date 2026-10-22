@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:04:53 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 01:52:37 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 03:10:09 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define USERLEN 10
 # define MAX_MSG_LEN 510
 # define MAX_RECV_LEN 8192
+# define MAX_SEND_LEN 262144
 
 class Client
 {
@@ -34,6 +35,7 @@ class Client
 		bool		_closing;
 		bool		_cap_negotiating;
 		bool		_invisible;
+		bool		_sendq_exceeded;
 
 		Client();
 
@@ -70,7 +72,9 @@ class Client
 		void				set_closing(bool value);
 		void				set_cap_negotiating(bool value);
 		void				set_invisible(bool value);
+		void				set_sendq_exceeded(bool value);
 		bool				is_recv_overflow() const;
+		bool				is_sendq_exceeded() const;
 };
 
 #endif
