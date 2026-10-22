@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:11:02 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 07:26:08 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 08:03:24 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,6 @@ bool	Server::read_client(size_t i)
 	char		buf[512];
 	ssize_t		bytes;
 	Client		*client;
-	std::string	line;
 
 	bytes = recv(_pfds[i].fd, buf, sizeof(buf), 0);
 	if (bytes <= 0)
@@ -237,8 +236,7 @@ bool	Server::read_client(size_t i)
 	client->set_last_activity(time(NULL));
 	client->set_ping_sent(false);
 	client->append_recv(buf, bytes);
-	while ((!client->is_closing()) && (client->extract_line(line)))
-		handle_line(*client, line);
+	process_lines(*client);
 	if ((!client->is_closing()) && (client->is_recv_overflow()))
 		disconnect_client(*client, "Excess Flood");
 	return (true);
@@ -345,17 +343,19 @@ void	Server::check_timeouts()
 	while (i < _pfds.size())
 	{
 		cl_it = _clients.find(_pfds[i].fd);
-		if ((cl_it != _clients.end()) && (is_timed_out(cl_it->second, now)))
+		if ((cl_it != _clients.end()) && (tick_client(cl_it->second, now)))
 			drop_client(i);
 		else
 			i++;
 	}
 }
 
-bool	Server::is_timed_out(Client &client, time_t now)
+bool	Server::tick_client(Client &client, time_t now)
 {
 	try
 	{
+		if (!client.is_closing())
+			process_lines(client);
 		if (client.is_closing())
 			return (now - client.get_closing_time() >= CLOSE_TIMEOUT);
 		if (!client.is_registered())
@@ -394,6 +394,47 @@ void	Server::set_listening(bool value)
 	{
 		_pfds[0].events = 0;
 		_paused_since = time(NULL);
+	}
+}
+
+void	Server::process_lines(Client &client)
+{
+	std::string	line;
+	time_t		now;
+
+	now = time(NULL);
+	while ((!client.is_closing()) && (!client.is_sendq_exceeded())
+		&& (!is_flooding(client, now)) && (client.extract_line(line)))
+	{
+		handle_line(client, line);
+		client.set_flood_timer(client.get_flood_timer() + FLOOD_COST);
+	}
+	if (!client.is_closing())
+		set_reading(client, !is_flooding(client, now));
+}
+
+bool	Server::is_flooding(Client &client, time_t now)
+{
+	if (client.get_flood_timer() < now)
+		client.set_flood_timer(now);
+	return (client.get_flood_timer() >= now + FLOOD_WINDOW);
+}
+
+void	Server::set_reading(Client &client, bool value)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < _pfds.size())
+	{
+		if (_pfds[i].fd == client.get_fd())
+		{
+			if (value)
+				_pfds[i].events |= POLLIN;
+			else
+				_pfds[i].events &= ~POLLIN;
+		}
+		i++;
 	}
 }
 

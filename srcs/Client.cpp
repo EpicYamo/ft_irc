@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 20:07:23 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 07:20:10 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 07:58:09 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ Client::Client()
 	_username(""), _realname(""), _pass_ok(false), _registered(false),
 	_closing(false), _cap_negotiating(false), _invisible(false),
 	_sendq_exceeded(false), _ping_sent(false), _connect_time(0),
-	_last_activity(0), _closing_time(0) {}
+	_last_activity(0), _closing_time(0), _flood_timer(0) {}
 
 Client::Client(int fd, const std::string &ip)
 	: _fd(fd), _ip(ip), _recv_buf(""), _send_buf(""), _nick(""),
 	_username(""), _realname(""), _pass_ok(false), _registered(false),
 	_closing(false), _cap_negotiating(false), _invisible(false),
 	_sendq_exceeded(false), _ping_sent(false), _connect_time(time(NULL)),
-	_last_activity(time(NULL)), _closing_time(0) {}
+	_last_activity(time(NULL)), _closing_time(0), _flood_timer(0) {}
 
 Client::Client(const Client &other)
 	: _fd(other._fd), _ip(other._ip), _recv_buf(other._recv_buf),
@@ -34,7 +34,8 @@ Client::Client(const Client &other)
 	_closing(other._closing), _cap_negotiating(other._cap_negotiating),
 	_invisible(other._invisible), _sendq_exceeded(other._sendq_exceeded),
 	_ping_sent(other._ping_sent), _connect_time(other._connect_time),
-	_last_activity(other._last_activity), _closing_time(other._closing_time) {}
+	_last_activity(other._last_activity), _closing_time(other._closing_time),
+	_flood_timer(other._flood_timer) {}
 
 Client::~Client() {}
 
@@ -59,6 +60,7 @@ Client	&Client::operator=(const Client &other)
 		_connect_time = other._connect_time;
 		_last_activity = other._last_activity;
 		_closing_time = other._closing_time;
+		_flood_timer = other._flood_timer;
 	}
 	return (*this);
 }
@@ -152,6 +154,11 @@ time_t	Client::get_closing_time() const
 	return (_closing_time);
 }
 
+time_t	Client::get_flood_timer() const
+{
+	return (_flood_timer);
+}
+
 bool	Client::is_pass_ok() const
 {
 	return (_pass_ok);
@@ -243,4 +250,9 @@ void	Client::set_ping_sent(bool value)
 void	Client::set_last_activity(time_t value)
 {
 	_last_activity = value;
+}
+
+void	Client::set_flood_timer(time_t value)
+{
+	_flood_timer = value;
 }

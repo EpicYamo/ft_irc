@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/01 23:04:56 by aaycan            #+#    #+#             */
-/*   Updated: 2026/10/22 07:20:57 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/10/22 07:58:50 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 # define PING_INTERVAL 120
 # define PING_TIMEOUT 120
 # define CLOSE_TIMEOUT 10
+# define FLOOD_COST 1
+# define FLOOD_WINDOW 10
 
 class Server
 {
@@ -64,7 +66,10 @@ class Server
 		void		remove_client_quietly(size_t i);
 		void		remove_sendq_exceeded();
 		void		check_timeouts();
-		bool		is_timed_out(Client &client, time_t now);
+		bool		tick_client(Client &client, time_t now);
+		void		process_lines(Client &client);
+		bool		is_flooding(Client &client, time_t now);
+		void		set_reading(Client &client, bool value);
 		void		set_listening(bool value);
 		void		handle_line(Client &client, const std::string &line);
 		bool		write_client(size_t i);
