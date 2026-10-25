@@ -4,8 +4,7 @@ An IRC server written in **C++98**, from the sockets up: one `poll()` loop,
 non-blocking I/O, channels and modes, private messages, DCC file-transfer
 relaying, and a small companion bot.
 
-> Part of the **42 school curriculum**. Built by **Arda Aycan** and
-> **itaskira**.
+> Part of the **42 school curriculum**. Built by **Arda Aycan**.
 
 Clients such as irssi or HexChat connect over TCP, register with a password,
 nickname and username, and then talk to each other in private messages or in
@@ -231,9 +230,8 @@ AI was used as a study aid, not as a code generator:
 - discussing design decisions,
 - writing test scenarios and reading server logs.
 
-## Authors
+## Author
 
-- **Arda Aycan** ([@EpicYamo](https://github.com/EpicYamo))
-- **itaskira**
+**Arda Aycan** ([@EpicYamo](https://github.com/EpicYamo))
 
 Built as part of the 42 school curriculum.
